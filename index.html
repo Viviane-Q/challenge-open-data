@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Challenge Open Data</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="index.js"></script>
+</head>
+
+<body>
+    <nav class="container-fluid">
+        <ul>
+            <li><strong>Challenge Open Data</strong></li>
+        </ul>
+        <ul>
+            <li><a href="index.html">Visualisation</a></li>
+            <li><a href="rapport.html">Rapport</a></li>
+        </ul>
+    </nav>
+    <hr class="divider"/>
+    <div class="container-fluid" id="main-container">
+        <button class="primary" role="button" id="cons-btn">Consommation</button>
+        <button class="secondary" role="button" id="prod-btn">Production</button>
+        <button class="contrast" role="button" id="res-btn">Réserves</button>
+        <details role="list" id="country-list">
+            <summary aria-haspopup="listbox">Pays</summary>
+            <ul role="listbox">
+                <li>
+                    <label>
+                        <input type="checkbox">
+                        Banana
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox">
+                        Watermelon
+                    </label>
+                </li>
+            </ul>
+        </details>
+        <div id="year-range-container">
+            <div>
+                1965
+            </div>
+            <label for="range">Année
+                <input type="range" min="0" max="100" value="50" id="range" name="range" />
+            </label>
+            <div>
+                2021
+            </div>
+        </div>
+        <article id="map-container" style="width: 100%; height: 100%;"></article>
+        <article id="curve-container" style="width: 100%; height: 100%;"></article>
+        <article id="pie-chart-container" style="width: 100%; height: 100%;"></article>
+        <article id="mix-chart-container" style="width: 100%; height: 100%;"></article>
+    </div>
+    </div>
+</body>
+
+</html>
