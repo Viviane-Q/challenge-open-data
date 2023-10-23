@@ -65,4 +65,5 @@ Map styling
   border: 1px solid #ccc;
   border-radius: 4px;
   box-shadow: 3px 3px 10px 0px rgba(0, 0, 0, 0.25);
+  white-space: pre-line;
 }
