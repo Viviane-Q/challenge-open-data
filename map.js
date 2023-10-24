@@ -5,6 +5,7 @@ const energyType = {
       .domain([100, 300, 500, 1000, 3000, 5000])
       .range(d3.schemeBlues[7]),
     legend: 'Consumption (TWh)',
+    title: (year) => `Oil Consumption (TWh) in the world in ${year}`,
   },
   production: {
     colorScale: d3
@@ -12,6 +13,7 @@ const energyType = {
       .domain([100, 300, 500, 1000, 3000, 5000])
       .range(d3.schemeReds[7]),
     legend: 'Production (TWh)',
+    title: (year) => `Oil Production (TWh) in the world in ${year}`,
   },
   reserves: {
     colorScale: d3
@@ -19,6 +21,7 @@ const energyType = {
       .domain([100000, 1000000, 10000000, 30000000, 100000000, 500000000])
       .range(d3.schemeGreens[7]),
     legend: 'Reserves (Barrels)',
+    title: (year) => `Oil Reserves (Barrels) in the world in ${year}`,
   },
 };
 
@@ -33,6 +36,9 @@ const worldmap = '/Data/world.geojson';
 const oilData = '/Data/oil.json';
 const legend = d3MapSvg.append('g').attr('id', 'legend');
 const x = d3.scaleLinear().domain([2.6, 75.1]).rangeRound([600, 860]);
+const yearSlider = document.getElementById('year-slider');
+const energyBtn = document.getElementsByClassName('energy-btn');
+const mapTitle = document.getElementById('map-title');
 
 // style of geographic projection and scaling
 const projection = d3
@@ -54,8 +60,6 @@ d3.queue().defer(d3.json, worldmap).defer(d3.json, oilData).awaitAll(ready);
 // ----------------------------
 // topo is the data received from the d3.queue defers function
 function ready(error, topo) {
-  const yearSlider = document.getElementById('year-slider');
-  const energyBtn = document.getElementsByClassName('energy-btn');
   let selectedCountries = [];
   let selectedEnergyType = 'consumption';
 
@@ -140,6 +144,7 @@ function ready(error, topo) {
     world.selectAll('path').attr('fill', function (d) {
       return fillMap(d, yearSlider.value);
     });
+    mapTitle.innerText = energyType[selectedEnergyType].title(yearSlider.value);
   });
 
   for (let i = 0; i < energyBtn.length; i++) {
@@ -149,6 +154,7 @@ function ready(error, topo) {
       world.selectAll('path').attr('fill', function (d) {
         return fillMap(d, yearSlider.value);
       });
+      mapTitle.innerText = energyType[selectedEnergyType].title(yearSlider.value);
     });
   }
 
@@ -160,6 +166,7 @@ function ready(error, topo) {
     .on('click', clickBackground);
 
   // Draw the map
+  mapTitle.innerText = energyType[selectedEnergyType].title(yearSlider.value);
   const world = d3MapSvg.append('g').attr('class', 'world');
   world
     .selectAll('path')
