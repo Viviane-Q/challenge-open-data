@@ -8,24 +8,32 @@ Main page grid layout
   grid-column-gap: 16px;
   grid-row-gap: 16px;
   align-items: center;
+  width: 100vw;
+  height: 90vh;
 }
 #cons-btn {
   grid-area: 1 / 1 / 2 / 2;
+  margin-bottom: -0.5rem;
 }
 #prod-btn {
   grid-area: 1 / 2 / 2 / 3;
+  margin-bottom: -0.5rem;
 }
 #res-btn {
   grid-area: 1 / 3 / 2 / 4;
+  margin-bottom: -0.5rem;
 }
 #country-list {
   grid-area: 1 / 4 / 2 / 5;
+  margin-bottom: -0.5rem;
 }
 #year-range-container {
   display: grid;
   grid-template-columns: 1fr 8fr 1fr;
   grid-area: 1 / 5 / 2 / 6;
   align-items: center;
+  grid-column-gap: 16px;
+  margin-bottom: -0.5rem;
 }
 #map-container {
   grid-area: 2 / 1 / 7 / 5;
@@ -45,7 +53,7 @@ Main page grid layout
 Components styling
 */
 hr {
-  margin-top: 0;
+  margin: 0;
   border-top: 1px #d5dce2 solid;
 }
 

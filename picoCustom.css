@@ -1,0 +1,32 @@
+:root {
+  --form-element-spacing-vertical: 0.5rem;
+}
+
+h5 {
+  --typography-spacing-vertical: 0px;
+}
+
+button, details, input{
+    --spacing: 0.2rem;
+}
+
+article {
+    --block-spacing-vertical: var(--spacing);
+    --block-spacing-horizontal: var(--spacing);
+}
+/* 
+[data-theme='light'],
+:root:not([data-theme='dark']) {
+  --primary: #e16c6a;
+  --primary-hover: #b44c4c;
+  --primary-focus: rgba(229, 57, 53, 0.125);
+  --primary-inverse: rgba(0, 0, 0, 0.633);
+  --secondary: #f3df85;
+  --secondary-hover: #e0bf6c;
+  --secondary-focus: rgba(253, 216, 53, 0.125);
+  --secondary-inverse: rgba(0, 0, 0, 0.633);
+  --contrast: #7cb2ad;
+  --contrast-hover: #438584;
+  --contrast-focus: rgba(0, 137, 123, 0.125);
+  --contrast-inverse: rgba(0, 0, 0, 0.633);
+} */

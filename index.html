@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Challenge Open Data</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <link rel="stylesheet" href="picoCustom.css">
     <link rel="stylesheet" href="style.css">
     <script src="https://d3js.org/d3.v4.js"></script>
     <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
@@ -24,9 +25,9 @@
     </nav>
     <hr class="divider" />
     <div class="container-fluid" id="main-container">
-        <button class="primary energy-btn" role="button" energy-type="consumption">Consumption</button>
-        <button class="secondary energy-btn" role="button" energy-type="production">Production</button>
-        <button class="contrast energy-btn" role="button" energy-type="reserves">Reserves</button>
+        <button class="primary energy-btn" role="button" energy-type="consumption" id="cons-btn">Consumption</button>
+        <button class="secondary energy-btn" role="button" energy-type="production" id="prod-btn">Production</button>
+        <button class="contrast energy-btn" role="button" energy-type="reserves" id="res-btn">Reserves</button>
         <details role="list" id="country-list">
             <summary aria-haspopup="listbox">Pays</summary>
             <ul role="listbox">
