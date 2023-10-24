@@ -6,13 +6,15 @@ h5 {
   --typography-spacing-vertical: 0px;
 }
 
-button, details, input{
-    --spacing: 0.2rem;
+button,
+details,
+input {
+  --spacing: 0.2rem;
 }
 
 article {
-    --block-spacing-vertical: var(--spacing);
-    --block-spacing-horizontal: var(--spacing);
+  --block-spacing-vertical: var(--spacing);
+  --block-spacing-horizontal: var(--spacing);
 }
 /* 
 [data-theme='light'],

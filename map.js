@@ -2,20 +2,23 @@ const energyType = {
   consumption: {
     colorScale: d3
       .scaleThreshold()
-      .domain([10, 100, 1000, 3000, 10000, 50000])
+      .domain([100, 300, 500, 1000, 3000, 5000])
       .range(d3.schemeBlues[7]),
+    legend: 'Consumption (TWh)',
   },
   production: {
     colorScale: d3
       .scaleThreshold()
-      .domain([10, 100, 1000, 3000, 10000, 50000])
+      .domain([100, 300, 500, 1000, 3000, 5000])
       .range(d3.schemeReds[7]),
+    legend: 'Production (TWh)',
   },
   reserves: {
     colorScale: d3
       .scaleThreshold()
       .domain([100000, 1000000, 10000000, 30000000, 100000000, 500000000])
       .range(d3.schemeGreens[7]),
+    legend: 'Reserves (Barrels)',
   },
 };
 
@@ -25,16 +28,17 @@ const d3MapSvg = d3.select(mapSvg),
   width = mapSvg.clientWidth,
   height = mapSvg.clientHeight,
   path = d3.geoPath(),
-  data = d3.map(),
-  worldmap =
-    'https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson';
+  data = d3.map();
+const worldmap = '/Data/world.geojson';
 const oilData = '/Data/oil.json';
+const legend = d3MapSvg.append('g').attr('id', 'legend');
+const x = d3.scaleLinear().domain([2.6, 75.1]).rangeRound([600, 860]);
 
 // style of geographic projection and scaling
 const projection = d3
   .geoRobinson()
-  .scale(130)
-  .translate([width / 2, height / 2]);
+  .scale(160)
+  .translate([width / 2, height / 2 + 10]);
 
 // add tooltip
 const tooltip = d3
@@ -141,6 +145,7 @@ function ready(error, topo) {
   for (let i = 0; i < energyBtn.length; i++) {
     energyBtn[i].addEventListener('click', () => {
       selectedEnergyType = energyBtn[i].getAttribute('energy-type');
+      drawLegend();
       world.selectAll('path').attr('fill', function (d) {
         return fillMap(d, yearSlider.value);
       });
@@ -173,9 +178,7 @@ function ready(error, topo) {
     })
     // add a class, styling and mouseover/mouseleave and click functions
     .style('stroke', 'transparent')
-    .attr('class', function (d) {
-      return 'Country';
-    })
+    .attr('class', 'Country')
     .attr('id', function (d) {
       return d.id;
     })
@@ -184,56 +187,54 @@ function ready(error, topo) {
     .on('mouseleave', mouseLeave)
     .on('click', clickCountry);
 
-  // TODO: Legend
-  // const x = d3.scaleLinear().domain([2.6, 75.1]).rangeRound([600, 860]);
+  const drawLegend = () => {
+    const legendSize = 20;
 
-  // const legend = d3MapSvg.append('g').attr('id', 'legend');
+    // clear legend before redrawing
+    legend.selectAll('*').remove();
 
-  // const legend_entry = legend
-  //   .selectAll('g.legend')
-  //   .data(
-  //     colorScale.range().map(function (d) {
-  //       d = colorScale.invertExtent(d);
-  //       if (d[0] == null) d[0] = x.domain()[0];
-  //       if (d[1] == null) d[1] = x.domain()[1];
-  //       return d;
-  //     })
-  //   )
-  //   .enter()
-  //   .append('g')
-  //   .attr('class', 'legend_entry');
+    legend
+      .append('text')
+      .attr('y', height - legendSize * 10)
+      .text(`${energyType[selectedEnergyType].legend}`);
 
-  // const ls_w = 20,
-  //   ls_h = 20;
+    const legend_entry = legend
+      .selectAll('g.legend')
+      .data(
+        energyType[selectedEnergyType].colorScale.range().map(function (d) {
+          d = energyType[selectedEnergyType].colorScale.invertExtent(d);
+          if (d[0] == null) d[0] = x.domain()[0];
+          if (d[1] == null) d[1] = x.domain()[1];
+          return d;
+        })
+      )
+      .enter()
+      .append('g')
+      .attr('class', 'legend_entry');
 
-  // legend_entry
-  //   .append('rect')
-  //   .attr('x', 20)
-  //   .attr('y', function (d, i) {
-  //     return height - i * ls_h - 2 * ls_h;
-  //   })
-  //   .attr('width', ls_w)
-  //   .attr('height', ls_h)
-  //   .style('fill', function (d) {
-  //     return colorScale(d[0]);
-  //   })
-  //   .style('opacity', 0.8);
+    legend_entry
+      .append('rect')
+      .attr('y', function (d, i) {
+        return height - (i + 3) * legendSize;
+      })
+      .attr('width', legendSize)
+      .attr('height', legendSize)
+      .style('fill', function (d) {
+        return energyType[selectedEnergyType].colorScale(d[0]);
+      });
 
-  // legend_entry
-  //   .append('text')
-  //   .attr('x', 50)
-  //   .attr('y', function (d, i) {
-  //     return height - i * ls_h - ls_h - 6;
-  //   })
-  //   .text(function (d, i) {
-  //     if (i === 0) return '< ' + d[1] / 1000000 + ' m';
-  //     if (d[1] < d[0]) return d[0] / 1000000 + ' m +';
-  //     return d[0] / 1000000 + ' m - ' + d[1] / 1000000 + ' m';
-  //   });
+    legend_entry
+      .append('text')
+      .attr('x', 30)
+      .attr('y', function (d, i) {
+        return height - (i + 2) * legendSize - 4;
+      })
+      .text(function (d, i) {
+        if (i === 0) return '< ' + d[1];
+        if (d[1] < d[0]) return d[0] + ' +';
+        return d[0] + ' - ' + d[1];
+      });
+  };
 
-  // legend
-  //   .append('text')
-  //   .attr('x', 15)
-  //   .attr('y', 280)
-  //   .text('Population (Million)');
+  drawLegend();
 }
