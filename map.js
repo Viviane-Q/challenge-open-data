@@ -1,3 +1,24 @@
+const energyType = {
+  consumption: {
+    colorScale: d3
+      .scaleThreshold()
+      .domain([10, 100, 1000, 3000, 10000, 50000])
+      .range(d3.schemeBlues[7]),
+  },
+  production: {
+    colorScale: d3
+      .scaleThreshold()
+      .domain([10, 100, 1000, 3000, 10000, 50000])
+      .range(d3.schemeReds[7]),
+  },
+  reserves: {
+    colorScale: d3
+      .scaleThreshold()
+      .domain([100000, 1000000, 10000000, 30000000, 100000000, 500000000])
+      .range(d3.schemeGreens[7]),
+  },
+};
+
 // initial setup
 const mapSvg = document.getElementById('map-chart');
 const d3MapSvg = d3.select(mapSvg),
@@ -15,12 +36,6 @@ const projection = d3
   .scale(130)
   .translate([width / 2, height / 2]);
 
-// Define color scale
-const colorScale = d3
-  .scaleThreshold()
-  .domain([10, 100, 1000, 3000, 10000, 50000])
-  .range(d3.schemeBlues[7]);
-
 // add tooltip
 const tooltip = d3
   .select('body')
@@ -33,9 +48,12 @@ d3.queue().defer(d3.json, worldmap).defer(d3.json, oilData).awaitAll(ready);
 // ----------------------------
 //Start of Choropleth drawing
 // ----------------------------
+// topo is the data received from the d3.queue defers function
 function ready(error, topo) {
-  // topo is the data received from the d3.queue defers function
+  const yearSlider = document.getElementById('year-slider');
+  const energyBtn = document.getElementsByClassName('energy-btn');
   let selectedCountries = [];
+  let selectedEnergyType = 'consumption';
 
   // set oil data to map
   for (const [key, value] of Object.entries(topo[1])) {
@@ -63,8 +81,8 @@ function ready(error, topo) {
       .duration(400)
       .style('opacity', 1)
       .text(
-        `${d.properties.name}\r\n Total: ${d.consumption}\r\n Per Capita: ${
-          d.consumption / d.population
+        `${d.properties.name}\r\n Total: ${d.value}\r\n Per Capita: ${
+          d.value / d.population
         }`
       );
   };
@@ -77,7 +95,7 @@ function ready(error, topo) {
       }
       changeCountryStyle(d3.select(this), 0.5, 'transparent');
     } else {
-      changeCountryStyle(d3.select(this), 1, 'transparent');
+      changeCountryStyle(d3.selectAll('.Country'), 1, 'transparent');
     }
     tooltip.transition().duration(300).style('opacity', 0);
   };
@@ -109,10 +127,25 @@ function ready(error, topo) {
 
   const fillMap = (d, year) => {
     const dataYear = data.get(year);
-    d.consumption = dataYear[d.id]?.consumption || 0;
+    d.value = dataYear[d.id]?.[selectedEnergyType] || 0;
     d.population = dataYear[d.id]?.population || 0;
-    return colorScale(d.consumption);
+    return energyType[selectedEnergyType].colorScale(d.value);
   };
+
+  yearSlider.addEventListener('input', () => {
+    world.selectAll('path').attr('fill', function (d) {
+      return fillMap(d, yearSlider.value);
+    });
+  });
+
+  for (let i = 0; i < energyBtn.length; i++) {
+    energyBtn[i].addEventListener('click', () => {
+      selectedEnergyType = energyBtn[i].getAttribute('energy-type');
+      world.selectAll('path').attr('fill', function (d) {
+        return fillMap(d, yearSlider.value);
+      });
+    });
+  }
 
   d3MapSvg
     .append('rect')
@@ -136,7 +169,7 @@ function ready(error, topo) {
     })
     // set the color of each country
     .attr('fill', function (d) {
-      return fillMap(d, 2021);
+      return fillMap(d, yearSlider.value);
     })
     // add a class, styling and mouseover/mouseleave and click functions
     .style('stroke', 'transparent')
@@ -150,13 +183,6 @@ function ready(error, topo) {
     .on('mouseover', mouseOver)
     .on('mouseleave', mouseLeave)
     .on('click', clickCountry);
-
-  const yearSlider = document.getElementById('year-slider');
-  yearSlider.addEventListener('input', () => {
-    world.selectAll('path').attr('fill', function (d) {
-      return fillMap(d, yearSlider.value);
-    });
-  });
 
   // TODO: Legend
   // const x = d3.scaleLinear().domain([2.6, 75.1]).rangeRound([600, 860]);
