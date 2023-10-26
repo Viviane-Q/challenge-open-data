@@ -57,6 +57,11 @@ hr {
   border-top: 1px #d5dce2 solid;
 }
 
+#country-list-box {
+  max-height: 16rem;
+  overflow-y: scroll;
+}
+
 /*
 Map styling
 */
