@@ -3,13 +3,13 @@ Main page grid layout
 */
 #main-container {
   display: grid;
-  grid-template-columns: repeat(3, 0.8fr) 1.5fr 2fr;
+  grid-template-columns: repeat(3, 0.5fr) 1.5fr 2fr;
   grid-template-rows: repeat(9, 1fr);
   grid-column-gap: 16px;
   grid-row-gap: 16px;
   align-items: center;
   width: 100vw;
-  height: 90vh;
+  height: 93vh;
 }
 #cons-btn {
   grid-area: 1 / 1 / 2 / 2;
@@ -29,10 +29,10 @@ Main page grid layout
 }
 #year-range-container {
   display: grid;
-  grid-template-columns: 1fr 8fr 1fr;
+  grid-template-columns: 1fr 12fr 1fr;
   grid-area: 1 / 5 / 2 / 6;
   align-items: center;
-  grid-column-gap: 16px;
+  grid-column-gap: 12px;
   margin-bottom: -0.5rem;
 }
 #map-container {
