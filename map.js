@@ -90,8 +90,8 @@ function ready(error, topo) {
       .duration(400)
       .style('opacity', 1)
       .text(
-        `${d.properties.name}\r\n Total: ${d.value}\r\n Per Capita: ${
-          d.value / d.population
+        `${d.properties.name}\r\n Total: ${d.value ?? 'NA'}\r\n Per Capita: ${
+          d.value && d.population ? (d.value / d.population).toFixed(2) : 'NA' // TODO change unit
         }`
       );
   };
@@ -144,15 +144,14 @@ function ready(error, topo) {
 
   const fillMap = (d, year) => {
     const dataYear = data.get(year);
-    d.value = dataYear[d.id]?.[selectedEnergyType] || 0;
-    d.population = dataYear[d.id]?.population || 0;
+    d.value = dataYear[d.id]?.[selectedEnergyType];
+    d.population = dataYear[d.id]?.population;
+    if (isNaN(d.value)) return 'grey';
     return energyType[selectedEnergyType].colorScale(d.value);
   };
 
   const fillCountryList = (year) => {
     countryListBox.innerHTML = '';
-    console.log(data.get(year));
-    console.log(Object.entries(data.get(year)));
     for (const [key, value] of Object.entries(data.get(year))) {
       const input = document.createElement('input');
       input.type = 'checkbox';
@@ -240,9 +239,10 @@ function ready(error, topo) {
     // clear legend before redrawing
     legend.selectAll('*').remove();
 
+    // legend title
     legend
       .append('text')
-      .attr('y', height - legendSize * 10)
+      .attr('y', height - legendSize * 11)
       .text(`${energyType[selectedEnergyType].legend}`);
 
     const legend_entry = legend
@@ -259,10 +259,11 @@ function ready(error, topo) {
       .append('g')
       .attr('class', 'legend_entry');
 
+    // defined values colors
     legend_entry
       .append('rect')
       .attr('y', function (d, i) {
-        return height - (i + 3) * legendSize;
+        return height - (i + 4) * legendSize;
       })
       .attr('width', legendSize)
       .attr('height', legendSize)
@@ -270,17 +271,33 @@ function ready(error, topo) {
         return energyType[selectedEnergyType].colorScale(d[0]);
       });
 
+    // legend text
     legend_entry
       .append('text')
       .attr('x', 30)
       .attr('y', function (d, i) {
-        return height - (i + 2) * legendSize - 4;
+        return height - (i + 3) * legendSize - 4;
       })
       .text(function (d, i) {
         if (i === 0) return '< ' + d[1];
         if (d[1] < d[0]) return d[0] + ' +';
         return d[0] + ' - ' + d[1];
       });
+    
+    // undefined values color
+    legend
+      .append('rect')
+      .attr('y', height - legendSize * 3)
+      .attr('width', legendSize)
+      .attr('height', legendSize)
+      .style('fill', 'grey');
+    
+    // undefined values legend text
+    legend
+      .append('text')
+      .attr('x', 30)
+      .attr('y', height - legendSize * 2-3)
+      .text('NA');
   };
 
   drawLegend();
