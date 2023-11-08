@@ -98,11 +98,10 @@ function ready(error, topo) {
 
   const mouseLeave = function (d) {
     if (selectedCountries.length > 0) {
-      // if hovered country is selected
-      if (selectedCountries.includes(d.id)) {
-        return;
+      // if hovered country is not selected
+      if (!selectedCountries.includes(d.id)) {
+        changeCountryStyle(d3.select(this), 0.5, 'transparent');
       }
-      changeCountryStyle(d3.select(this), 0.5, 'transparent');
     } else {
       changeCountryStyle(d3.selectAll('.Country'), 1, 'transparent');
     }
@@ -110,7 +109,16 @@ function ready(error, topo) {
   };
 
   // Select or deselect country
-  function clickCountry(d, element = this) {
+  function clickCountry(d) {
+    let countryElement;
+    if (typeof countryElement === 'number') { 
+      // if click is triggered through map
+      countryElement = this;
+    } else {
+      // if click is triggered through country list
+      countryElement = document.querySelector(`path#${d.id}`);
+    }
+
     if (selectedCountries.includes(d.id)) {
       // deselect country
       selectedCountries = selectedCountries.filter((e) => e !== d.id);
@@ -118,16 +126,16 @@ function ready(error, topo) {
       if (selectedCountries.length === 0) {
         changeCountryStyle(d3.selectAll('.Country'), 1, 'transparent');
       } else {
-        changeCountryStyle(d3.select(element), 0.5, 'transparent');
+        changeCountryStyle(d3.select(countryElement), 0.5, 'transparent');
       }
     } else {
       // select country
-      if (selectedCountries.length === 0) {
+      if (selectedCountries.length === 0) { // when selecting first country
         changeCountryStyle(d3.selectAll('.Country'), 0.5, 'transparent');
       }
       selectedCountries.push(d.id);
       countryListBox.querySelector(`input[value="${d.id}"]`).checked = true;
-      changeCountryStyle(d3.select(element), 1, 'black');
+      changeCountryStyle(d3.select(countryElement), 1, 'black');
     }
   }
 
@@ -150,32 +158,34 @@ function ready(error, topo) {
     return energyType[selectedEnergyType].colorScale(d.value);
   };
 
-  const fillCountryList = (year) => {
+  const fillCountryList = () => {
     countryListBox.innerHTML = '';
-    for (const [key, value] of Object.entries(data.get(year))) {
+    for(const country of topo[0].features) {
+      const countryId = country.id;
+      const countryName = country.properties.name;
+
+      // create input element
       const input = document.createElement('input');
       input.type = 'checkbox';
-      input.value = key;
-      input.checked = selectedCountries.includes(key) ? true : false;
+      input.value = countryId;
+      input.checked = selectedCountries.includes(countryId) ? true : false;
       input.addEventListener('change', () => {
-        const path = document.querySelector(`path#${key}`);
-        clickCountry({ id: key }, path);
+        clickCountry({ id: countryId });
       });
 
+      // create label element
       const label = document.createElement('label');
       label.appendChild(input);
-      label.appendChild(document.createTextNode(value.country));
-
+      label.appendChild(document.createTextNode(countryName));
+  
       const li = document.createElement('li');
       li.appendChild(label);
-
+  
       countryListBox.appendChild(li);
     }
   };
 
   yearSlider.addEventListener('input', () => {
-    // replace country list with selected year's countries
-    fillCountryList(yearSlider.value);
     world.selectAll('path').attr('fill', function (d) {
       return fillMap(d, yearSlider.value);
     });
@@ -231,7 +241,7 @@ function ready(error, topo) {
     .on('mouseleave', mouseLeave)
     .on('click', clickCountry);
 
-  fillCountryList(yearSlider.value);
+  fillCountryList();
 
   const drawLegend = () => {
     const legendSize = 20;
