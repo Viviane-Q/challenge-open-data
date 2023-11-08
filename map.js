@@ -311,4 +311,5 @@ function ready(error, topo) {
   };
 
   drawLegend();
+  curveReady(selectedEnergyType, data)
 }

@@ -29,12 +29,6 @@ const curveEnergyType = {
 const curveTitle = document.querySelector('#curve-title');
 const curveSvg = document.querySelector('#curve-chart');
 
-var points = [
-    { xpoint: 25, ypoint: 150 },
-    { xpoint: 75, ypoint: 85 },
-    { xpoint: 100, ypoint: 115 },
-    { xpoint: 175, ypoint: 25 }
-];
 
 var Gen = d3.line()
     .x((p) => p.xpoint)
@@ -43,7 +37,7 @@ var Gen = d3.line()
 
 const svg = d3.select(document.getElementById('curve-chart'))
 
-function curveReady(selectedEnergyType) {
+function curveReady(selectedEnergyType, data) {
     console.log("curve ready");
     curveTitle.innerText = curveEnergyType[selectedEnergyType].title
 
@@ -84,7 +78,7 @@ function curveReady(selectedEnergyType) {
     svg.append("path").datum(consumptionPoints).attr("fill", "none")
         .attr("stroke", "steelblue")
         .attr("stroke-width", 1.5)
-        .attr("d", d3.line().x((d) => d.xpoint).y((d) => d.ypoint).curve(d3.curveBasis));
+        .attr("d", Gen)
 
     for (let i = 0; i < energyBtn.length; i++) {
         energyBtn[i].addEventListener('click', () => {
@@ -96,4 +90,4 @@ function curveReady(selectedEnergyType) {
             curveTitle.innerText = curveEnergyType[selectedEnergyType].title
         });
     }
-}   
+}
