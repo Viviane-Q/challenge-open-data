@@ -65,10 +65,9 @@ function ready(error, topo) {
   let selectedEnergyType = 'consumption';
 
   // set oil data to map
-  for (const [key, value] of Object.entries(topo[1])) {
-    data.set(key, value);
+  for (const [year, value] of Object.entries(topo[1])) {
+    data.set(year, value);
   }
-
   const changeCountryStyle = (selector, opacity, stroke) => {
     selector
       .transition()
@@ -137,6 +136,7 @@ function ready(error, topo) {
       countryListBox.querySelector(`input[value="${d.id}"]`).checked = true;
       changeCountryStyle(d3.select(countryElement), 1, 'black');
     }
+    updatePieChart(data.get(yearSlider.value), selectedEnergyType, selectedCountries);
   }
 
   // Add clickable background
@@ -148,6 +148,7 @@ function ready(error, topo) {
       .forEach((e) => (e.checked = false));
     changeCountryStyle(d3.selectAll('.Country'), 1, 'transparent');
     tooltip.transition().duration(300).style('opacity', 0);
+    updatePieChart(data.get(yearSlider.value), selectedEnergyType, []);
   };
 
   const fillMap = (d, year) => {
@@ -186,6 +187,9 @@ function ready(error, topo) {
   };
 
   yearSlider.addEventListener('input', () => {
+    updatePieChart(data.get(yearSlider.value), selectedEnergyType, selectedCountries);
+    // replace country list with selected year's countries
+    fillCountryList(yearSlider.value);
     world.selectAll('path').attr('fill', function (d) {
       return fillMap(d, yearSlider.value);
     });
@@ -202,6 +206,8 @@ function ready(error, topo) {
       mapTitle.innerText = energyType[selectedEnergyType].title(
         yearSlider.value
       );
+      updatePieChart(data.get(yearSlider.value), selectedEnergyType, selectedCountries);
+      
     });
   }
 
@@ -242,6 +248,7 @@ function ready(error, topo) {
     .on('click', clickCountry);
 
   fillCountryList();
+  
 
   const drawLegend = () => {
     const legendSize = 20;
@@ -313,4 +320,8 @@ function ready(error, topo) {
   drawLegend();
   curveReady(selectedEnergyType, data)
   mixReady(data)
+
+  // Update pie chart 
+  updatePieChart(data.get(yearSlider.value), selectedEnergyType, selectedCountries);
+
 }
