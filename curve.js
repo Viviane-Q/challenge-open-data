@@ -31,7 +31,7 @@ const curveSvg = document.querySelector('#curve-chart');
 
 
 var Gen = d3.line()
-    .x((p) => p.xpoint)
+    .x((p) => new Date(p.xpoint, 0, 1))
     .y((p) => p.ypoint)
     .curve(d3.curveBasis);
 
@@ -61,24 +61,24 @@ function curveReady(selectedEnergyType, data) {
     console.log(consumptionPoints);
     // Add X axis --> it is a date format
     var x = d3.scaleTime()
-        .domain(d3.extent(consumptionPoints, function(d) { return d.xpoint; }))
-        .range([0, width]);
+        .domain(d3.extent(consumptionPoints, function(d) { return new Date(d.xpoint, 0, 1); }))
+        .range([20, width - 50]);
     svg.append("g")
-        .attr("transform", "translate(0," + height + ")")
+        .attr("transform", "translate(30," + height/2  + ")")
         .call(d3.axisBottom(x));
     // Add Y axis
     var y = d3.scaleLinear()
-        .domain([0, d3.max(consumptionPoints, function(d) { return +d.ypoint; })])
-        .range([height, 0]);
+        .domain([0, d3.max(consumptionPoints, function(d) { return d.ypoint; })])
+        .range([height/2, 0]);
     svg.append("g")
+        .attr("transform", "translate(50,0)")
         .call(d3.axisLeft(y));
     // Add the line
-
 
     svg.append("path").datum(consumptionPoints).attr("fill", "none")
         .attr("stroke", "steelblue")
         .attr("stroke-width", 1.5)
-        .attr("d", Gen)
+        .attr("d", Gen);
 
     for (let i = 0; i < energyBtn.length; i++) {
         energyBtn[i].addEventListener('click', () => {
