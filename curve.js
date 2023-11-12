@@ -4,8 +4,8 @@ const curveEnergyType = {
             .scaleThreshold()
             .domain([100, 300, 500, 1000, 3000, 5000])
             .range(d3.schemeBlues[7]),
-        legend: 'Consommation (TWh)',
-        title: `Consommation annuelle de pétrole (TWh) dans le monde`,
+        legend: 'Consumption (TWh)',
+        title: `Annual Oil Consumption (TWh)`,
     },
     production: {
         colorScale: d3
@@ -13,15 +13,15 @@ const curveEnergyType = {
             .domain([100, 300, 500, 1000, 3000, 5000])
             .range(d3.schemeReds[7]),
         legend: 'Production (TWh)',
-        title: `Production annuelle de pétrole (TWh) dans le monde`,
+        title: `Annual Oil Production (TWh)`,
     },
     reserves: {
         colorScale: d3
             .scaleThreshold()
             .domain([100000, 1000000, 10000000, 30000000, 100000000, 500000000])
             .range(d3.schemeGreens[7]),
-        legend: 'Réserves (en Barils)',
-        title: `Réserves annuelle de pétrole (en Barils) dans le monde`,
+        legend: 'Reserves (Barrels)',
+        title: `Annual Oil Reserves (Barrels)`,
     },
 };
 
