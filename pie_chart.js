@@ -12,7 +12,7 @@ const pieChartWidth =
 
 // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
 var radius = Math.min(pieChartWidth, pieChartHeight) / 2;
-const pieChartTitle = document.getElementById('pie-chart-title');
+const pieChartTitle = document.getElementById("pie-chart-title");
 var pieChartSvg = d3.select("#pie-chart").append("g");
 
 pieChartSvg.append("g").attr("class", "slices");
@@ -65,13 +65,12 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
         return 1;
       }
     });
-    // take only 5 first elements
+    // take only 3 first elements
     data = data.slice(0, 3);
-    sum = data.reduce(
-      (accumulator, currentValue) =>
-        accumulator + currentValue[1][selectedEnergyType],
-      0
-    );
+    var invalid = false;
+    sum = data.reduce((accumulator, currentValue) => {
+      return accumulator + currentValue[1][selectedEnergyType];
+    }, 0);
     data = Object.fromEntries(data);
     // When there is selection, display selected countries with others
   } else {
@@ -92,9 +91,8 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
     return d.value[selectedEnergyType];
   });
 
-
   // update title
-  pieChartTitle.innerHTML = `Part de ${selectedEnergyType} du monde ${yearSlider.value}`
+  pieChartTitle.innerHTML = `Part de ${selectedEnergyType} du monde ${yearSlider.value}`;
   /* ------- Drawing pie chart -------*/
 
   var data_ready = pie(d3.entries(data));
@@ -129,7 +127,7 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
   // Text labels
   var labels = pieChartSvg.select(".labels").selectAll("text").data(data_ready);
   var lines = pieChartSvg.select(".lines").selectAll("line").data(data_ready);
-  var labelRadius = radius * 0.75;
+  var labelRadius = radius * 0.8;
   labels
     .enter()
     .append("text")
@@ -185,8 +183,8 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
     .attr("stroke", function (d) {
       return pieChartColor(d.index);
     });
-  var alpha = 0.7,
-    spacing = 15;
+  var alpha = 0.8,
+    spacing = 20;
 
   function relax() {
     var again = false;
