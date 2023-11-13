@@ -44,8 +44,8 @@ const countryListBox = document.getElementById('country-list-box');
 // style of geographic projection and scaling
 const projection = d3
   .geoRobinson()
-  .scale(160)
-  .translate([width / 2, height / 2 + 10]);
+  .scale(height / 3)
+  .translate([width / 2, height / 2 + 20]);
 
 // add tooltip
 const tooltip = d3
