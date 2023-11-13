@@ -40,6 +40,7 @@ const yearSlider = document.getElementById('year-slider');
 const energyBtn = document.getElementsByClassName('energy-btn');
 const mapTitle = document.getElementById('map-title');
 const countryListBox = document.getElementById('country-list-box');
+let selectedCountries = [];
 
 // style of geographic projection and scaling
 const projection = d3
@@ -61,7 +62,6 @@ d3.queue().defer(d3.json, worldmap).defer(d3.json, oilData).awaitAll(ready);
 // ----------------------------
 // topo is the data received from the d3.queue defers function
 function ready(error, topo) {
-  let selectedCountries = [];
   let selectedEnergyType = 'consumption';
 
   // set oil data to map
@@ -312,4 +312,5 @@ function ready(error, topo) {
 
   drawLegend();
   curveReady(selectedEnergyType, data)
+  mixReady(data)
 }

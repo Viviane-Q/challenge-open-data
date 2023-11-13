@@ -46,6 +46,14 @@ Main page grid layout
 }
 #mix-chart-container {
   grid-area: 6 / 5 / 10 / 6;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+}
+#mix-title {
+  margin-bottom: 1rem;
 }
 
 
