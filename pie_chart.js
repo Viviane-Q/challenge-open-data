@@ -40,10 +40,6 @@ pieChartSvg.attr(
     ((pieChartHeight + pieChartContainerPadding) / 2 + 10) + // some spaces for title
     ")"
 );
-var opacity = 0.8;
-var opacityHover = 1;
-var otherOpacityOnHover = 0.8;
-var tooltipMargin = 5;
 
 var key = function (d) {
   return d.data.key;
@@ -100,6 +96,16 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
 
   var data_ready = pie(d3.entries(data));
 
+  // default opacity of the slices
+  var opacity = 1;
+
+  // hover opacity of the slices
+  var opacityHover = 1;
+  // hover opacity of other slices
+  var otherOpacityOnHover = 0.6;
+  // margin of the tooltip
+  var tooltipMargin = 5;
+
   // slices
   var slice = pieChartSvg
     .select(".slices")
@@ -110,11 +116,13 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
     .enter()
     .insert("path")
     .merge(slice)
+    // tooltip
     .on("mouseover", function (d) {
       d3.selectAll("path").style("opacity", otherOpacityOnHover);
       d3.select(this).style("opacity", opacityHover);
 
-      let g = d3.select("#pie-chart")
+      let g = d3
+        .select("#pie-chart")
         .style("cursor", "pointer")
         .append("g")
         .attr("class", "tooltip")
@@ -122,7 +130,13 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
 
       g.append("text")
         .attr("class", "name-text")
-        .text(`${d.data.value.country} (${calculatePercentage(d.data.value[selectedEnergyType])}%)`)
+        //bigger font for country name
+        .style("font-size", "25px")
+        .text(
+          `${d.data.value.country} (${calculatePercentage(
+            d.data.value[selectedEnergyType]
+          )}%)`
+        )
         .attr("text-anchor", "middle");
 
       let text = g.select("text");
@@ -138,11 +152,10 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
         .attr("rx", 5)
         .style("stroke", "black")
         .style("stroke-width", 1);
-
     })
-    .on("mousemove", function(d) {
+    .on("mousemove", function (d) {
       let mousePosition = d3.mouse(this);
-      let x = mousePosition[0] + width / 2;
+      let x = mousePosition[0] + width / 2 - tooltipMargin - 50;
       let y = mousePosition[1] + height / 2 - tooltipMargin;
 
       let text = d3.select(".tooltip text");
@@ -163,16 +176,13 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
         .style("opacity", 1)
         .attr("transform", `translate(${x}, ${y})`);
     })
-    .on("mouseout", function(d) {
+    .on("mouseout", function (d) {
       d3.select("#pie-chart")
         .style("cursor", "default")
         .select(".tooltip")
         .remove();
       d3.selectAll("path").style("opacity", opacity);
     })
-    // .on("touchstart", function(d) {
-    //   d3.select("#pie-chart").style("cursor", "none");
-    // })
     .transition()
     .duration(1000)
     .attrTween("d", function (d) {
@@ -191,9 +201,11 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
   slice.exit().remove();
 
   function calculatePercentage(value) {
-    return Math.round((value/ total) * 100)
+    return Math.round((value / total) * 100);
   }
+
   // Text labels
+
   var labels = pieChartSvg.select(".labels").selectAll("text").data(data_ready);
   var lines = pieChartSvg.select(".lines").selectAll("line").data(data_ready);
   var labelRadius = radius * 0.8;
@@ -230,11 +242,17 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
     .enter()
     .append("line")
     .merge(lines)
+    // line from the outer arc to the label
     .attr("x1", function (d) {
-      return arc.centroid(d)[0];
+      var centroid = arc.centroid(d),
+        midAngle = Math.atan2(centroid[1], centroid[0]),
+        x = Math.cos(midAngle) * arc.outerRadius()(d);
+      return x;
     })
     .attr("y1", function (d) {
-      return arc.centroid(d)[1];
+      var centroid = arc.centroid(d),
+        midAngle = Math.atan2(centroid[1], centroid[0]);
+      return Math.sin(midAngle) * arc.outerRadius()(d);
     })
     .attr("x2", function (d) {
       var centroid = arc.centroid(d),
@@ -255,6 +273,7 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
   var alpha = 0.8,
     spacing = 20;
 
+  // Move labels vertically to avoid collisions
   function relax() {
     var again = false;
     labels.each(function (d, i) {
@@ -305,6 +324,7 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
     .select(".percentage")
     .selectAll("text")
     .data(data_ready);
+    
   function pointIsInArc(pt, ptData, d3Arc) {
     // Center of the arc is assumed to be 0,0
     // (pt.x, pt.y) are assumed to be relative to the center
