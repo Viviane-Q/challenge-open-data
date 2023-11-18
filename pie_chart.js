@@ -40,6 +40,10 @@ pieChartSvg.attr(
     ((pieChartHeight + pieChartContainerPadding) / 2 + 10) + // some spaces for title
     ")"
 );
+var opacity = 0.8;
+var opacityHover = 1;
+var otherOpacityOnHover = 0.8;
+var tooltipMargin = 5;
 
 var key = function (d) {
   return d.data.key;
@@ -67,7 +71,6 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
     });
     // take only 3 first elements
     data = data.slice(0, 3);
-    var invalid = false;
     sum = data.reduce((accumulator, currentValue) => {
       return accumulator + currentValue[1][selectedEnergyType];
     }, 0);
@@ -107,6 +110,69 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
     .enter()
     .insert("path")
     .merge(slice)
+    .on("mouseover", function (d) {
+      d3.selectAll("path").style("opacity", otherOpacityOnHover);
+      d3.select(this).style("opacity", opacityHover);
+
+      let g = d3.select("#pie-chart")
+        .style("cursor", "pointer")
+        .append("g")
+        .attr("class", "tooltip")
+        .style("opacity", 0);
+
+      g.append("text")
+        .attr("class", "name-text")
+        .text(`${d.data.value.country} (${calculatePercentage(d.data.value[selectedEnergyType])}%)`)
+        .attr("text-anchor", "middle");
+
+      let text = g.select("text");
+      let bbox = text.node().getBBox();
+      let padding = 1;
+      g.insert("rect", "text")
+        .attr("x", bbox.x - padding)
+        .attr("y", bbox.y - padding)
+        .attr("width", bbox.width + padding * 2)
+        .attr("height", bbox.height + padding * 2)
+        .style("fill", "white")
+        .style("opacity", 0.8)
+        .attr("rx", 5)
+        .style("stroke", "black")
+        .style("stroke-width", 1);
+
+    })
+    .on("mousemove", function(d) {
+      let mousePosition = d3.mouse(this);
+      let x = mousePosition[0] + width / 2;
+      let y = mousePosition[1] + height / 2 - tooltipMargin;
+
+      let text = d3.select(".tooltip text");
+      let bbox = text.node().getBBox();
+      if (x - bbox.width / 2 < 0) {
+        x = bbox.width / 2;
+      } else if (width - x - bbox.width / 2 < 0) {
+        x = width - bbox.width / 2;
+      }
+
+      if (y - bbox.height / 2 < 0) {
+        y = bbox.height + tooltipMargin * 2;
+      } else if (height - y - bbox.height / 2 < 0) {
+        y = height - bbox.height / 2;
+      }
+
+      d3.select(".tooltip")
+        .style("opacity", 1)
+        .attr("transform", `translate(${x}, ${y})`);
+    })
+    .on("mouseout", function(d) {
+      d3.select("#pie-chart")
+        .style("cursor", "default")
+        .select(".tooltip")
+        .remove();
+      d3.selectAll("path").style("opacity", opacity);
+    })
+    // .on("touchstart", function(d) {
+    //   d3.select("#pie-chart").style("cursor", "none");
+    // })
     .transition()
     .duration(1000)
     .attrTween("d", function (d) {
@@ -124,6 +190,9 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
 
   slice.exit().remove();
 
+  function calculatePercentage(value) {
+    return Math.round((value/ total) * 100)
+  }
   // Text labels
   var labels = pieChartSvg.select(".labels").selectAll("text").data(data_ready);
   var lines = pieChartSvg.select(".lines").selectAll("line").data(data_ready);
@@ -264,7 +333,7 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
     .style("text-anchor", "middle")
     .style("color", "white")
     .text(function (d) {
-      return Math.round((d.data.value[selectedEnergyType] / total) * 100) + "%";
+      return calculatePercentage(d.data.value[selectedEnergyType]);
     })
     .each(function (d) {
       var bb = this.getBBox(),
