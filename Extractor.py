@@ -3,7 +3,6 @@ import json
 
 
 result = {}
-
 with open('./Data/oil-production-by-region.csv', newline='') as csvfile:
     reader = csv.DictReader(csvfile)
     for row in reader:
