@@ -20,13 +20,6 @@ pieChartSvg.append("g").attr("class", "labels");
 pieChartSvg.append("g").attr("class", "lines");
 pieChartSvg.append("g").attr("class", "percentage");
 
-var pie = d3
-  .pie()
-  .sort(null)
-  .value(function (d) {
-    return d.value;
-  });
-
 var arc = d3
   .arc()
   .outerRadius(radius * 0.6)

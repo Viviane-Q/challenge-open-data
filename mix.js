@@ -18,7 +18,7 @@ const mixHeight = 250
 const mixMargin = 40
 
 // radius of pieplot is half the mixWidth or half the mixHeight (smallest one)
-var radius = Math.min(mixWidth, mixHeight) / 2 - mixMargin
+var donutRadius = Math.min(mixWidth, mixHeight) / 2 - mixMargin
 
 // append the mixSvg object to the mix-chart-container
 const mixSvg = d3.select("#mix-chart-container")
@@ -30,7 +30,7 @@ const mixSvg = d3.select("#mix-chart-container")
     .attr("transform", "translate(" + mixWidth / 2 + "," + mixHeight / 2 + ")");
 
 // compute the position of each group on the pie:
-var pie = d3.pie()
+var donutPie = d3.pie()
   .value(function(d) {return d.value; });
 
 // center text management
@@ -46,7 +46,7 @@ function updateCenterText(newText) {
 }
 
 function drawDonut(mixData) {
-  var data_ready = pie(d3.entries(mixData));
+  var data_ready = donutPie(d3.entries(mixData));
   mixSvg
     .selectAll('whatever')
     .data(data_ready)
@@ -54,7 +54,7 @@ function drawDonut(mixData) {
     .append('path')
     .attr('d', d3.arc()
       .innerRadius(120) // size of the donut hole
-      .outerRadius(radius)
+      .outerRadius(donutRadius)
     )
     .attr('fill', function(d){ return(mixEnergyType["consumption"].colorScale(d.data.key)) })
 }
