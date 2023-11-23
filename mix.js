@@ -5,7 +5,7 @@ const mixEnergyType = {
             .domain(['oil', 'other'])
             .range(['#', '#1f77b4', '#aec7e8']),
         legend: 'Consommation (TWh)',
-        title: (year) => `Part de la consommation annuelle de pétrole dans le mix énergétique mondial en ${year} (en %)`,
+        title: (year) => `Share of annual oil consumption in the global energy mix in ${year}`,
     },
 };
 
@@ -13,9 +13,9 @@ const mixTitle = document.querySelector('#mix-title');
 const mixLegend = document.querySelector('#mix-legend');
 
 // set the dimensions and margins of the graph
-const mixWidth = 250
-const mixHeight = 250
-const mixMargin = 40
+const mixWidth = 180
+const mixHeight = 170
+const mixMargin = 20
 
 // radius of pieplot is half the mixWidth or half the mixHeight (smallest one)
 var donutRadius = Math.min(mixWidth, mixHeight) / 2 - mixMargin
@@ -38,7 +38,7 @@ const centerText = mixSvg.append("text")
     .attr("text-anchor", "middle")
     .attr("font-size", "2em")
     .attr("font-weight", "bold")
-    .attr("dy", "0.2em");
+    .attr("dy", "0.25em");
 
 // center text dynamic update
 function updateCenterText(newText) {
@@ -52,8 +52,11 @@ function drawDonut(mixData) {
     .data(data_ready)
     .enter()
     .append('path')
+    .merge(mixSvg.selectAll('path')) // merge new data with existing paths
+    .transition()
+    .duration(500)
     .attr('d', d3.arc()
-      .innerRadius(120) // size of the donut hole
+      .innerRadius(80) // size of the donut hole
       .outerRadius(donutRadius)
     )
     .attr('fill', function(d){ return(mixEnergyType["consumption"].colorScale(d.data.key)) })
