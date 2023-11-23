@@ -30,6 +30,7 @@ const energyType = {
     perCapitaUnit: 'Barrels',
   },
 };
+let selectedEnergyType = 'consumption';
 
 // initial setup
 const mapSvg = document.getElementById('map-chart');
@@ -68,7 +69,7 @@ d3.queue().defer(d3.json, worldmap).defer(d3.json, oilData).awaitAll(ready);
 // ----------------------------
 // topo is the data received from the d3.queue defers function
 function ready(error, topo) {
-  let selectedEnergyType = 'consumption';
+  // let selectedEnergyType = 'consumption';
 
   // set oil data to map
   for (const [year, value] of Object.entries(topo[1])) {
@@ -324,7 +325,7 @@ function ready(error, topo) {
   };
 
   drawLegend();
-  curveReady(selectedEnergyType, data)
+  curveReady(data)
   mixReady(data)
 
   // Update pie chart 
