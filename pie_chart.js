@@ -38,14 +38,27 @@ var key = function (d) {
   return d.data.key;
 };
 
-var pieChartColor = d3.scaleOrdinal().range(["#4e79a7","#f28e2c","#e15759","#76b7b2","#59a14f","#808080"]);
+var pieChartColor = d3
+  .scaleOrdinal()
+  .range(["#4e79a7", "#f28e2c", "#e15759", "#76b7b2", "#59a14f", "#808080"]);
+
+function removePieChart() {
+  pieChartSvg.selectAll("path").remove();
+  pieChartSvg.selectAll("line").remove();
+  pieChartSvg.selectAll("text").remove();
+  pieChartSvg.selectAll("percentage").remove();
+}
 
 // update pie chart
 function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
   let data = {};
   total = originalData["OWID_WRL"][selectedEnergyType];
-
-  // When there is no selection, display top 5 countries
+  if (!total) {
+    // if there is no data, remove the slices, lines, labels and percentage
+    removePieChart();
+    return;
+  }
+  // When there is no selection, display top 3 countries
   if (selectedCountries.length === 0) {
     data = JSON.parse(JSON.stringify(originalData));
     delete data["OWID_WRL"];
@@ -58,11 +71,17 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
         return 1;
       }
     });
-    // take only 3 first elements
+    // take only 5 first elements
     data = data.slice(0, 5);
-    sum = data.reduce((accumulator, currentValue) => {
-      return accumulator + currentValue[1][selectedEnergyType];
-    }, 0);
+    sum = 0;
+    for (let i = 0; i < data.length; i++) {
+      if (!data[i][1][selectedEnergyType]) {
+        // if there is no data, remove the slices, lines, labels and percentage
+        removePieChart();
+        return;
+      }
+      sum += data[i][1][selectedEnergyType];
+    }
     data = Object.fromEntries(data);
     // When there is selection, display selected countries with others
   } else {
@@ -269,11 +288,13 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
   // Move labels vertically to avoid collisions
   function relax() {
     var again = false;
-    labels.each(function (d, i) {
+    var textLabels = pieChartSvg.select(".labels").selectAll("text");
+    textLabels.each(function (d, i) {
       var a = this,
         da = d3.select(a),
         y1 = da.attr("y");
-      labels.each(function (d, j) {
+
+      textLabels.each(function (d, j) {
         var b = this;
         if (a === b) {
           return;
@@ -317,7 +338,7 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
     .select(".percentage")
     .selectAll("text")
     .data(data_ready);
-    
+
   function pointIsInArc(pt, ptData, d3Arc) {
     // Center of the arc is assumed to be 0,0
     // (pt.x, pt.y) are assumed to be relative to the center

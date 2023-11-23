@@ -13,12 +13,12 @@ const mixTitle = document.querySelector('#mix-title');
 const mixLegend = document.querySelector('#mix-legend');
 
 // set the dimensions and margins of the graph
-const mixWidth = 180
-const mixHeight = 170
-const mixMargin = 20
+const mixWidth = width/2
+const mixHeight = height/2
+const mixMargin = width/30
 
 // radius of pieplot is half the mixWidth or half the mixHeight (smallest one)
-var donutRadius = Math.min(mixWidth, mixHeight) / 2 - mixMargin
+var donutRadius = mixHeight / 2 - mixMargin
 
 // append the mixSvg object to the mix-chart-container
 const mixSvg = d3.select("#mix-chart-container")
@@ -26,6 +26,7 @@ const mixSvg = d3.select("#mix-chart-container")
     .attr("flex", 1)
     .attr("width", mixWidth)
     .attr("height", mixHeight)
+    .attr("overflow", "visible")
   .append("g")
     .attr("transform", "translate(" + mixWidth / 2 + "," + mixHeight / 2 + ")");
 
@@ -42,11 +43,18 @@ const centerText = mixSvg.append("text")
 
 // center text dynamic update
 function updateCenterText(newText) {
+  // Si le texte contient NaN, on le remplace par "No data"
+  if (newText.includes("NaN")) {
+    newText = "No data";
+  }
   centerText.text(newText);
 }
 
 function drawDonut(mixData) {
   var data_ready = donutPie(d3.entries(mixData));
+  mixSvg.selectAll('path')
+    .remove();
+
   mixSvg
     .selectAll('whatever')
     .data(data_ready)
@@ -56,9 +64,10 @@ function drawDonut(mixData) {
     .transition()
     .duration(500)
     .attr('d', d3.arc()
-      .innerRadius(80) // size of the donut hole
+      .innerRadius(width/10) // size of the donut hole
       .outerRadius(donutRadius)
     )
+    .attr("overflow", "visible")
     .attr('fill', function(d){ return(mixEnergyType["consumption"].colorScale(d.data.key)) })
 }
 
@@ -103,7 +112,16 @@ function mixReady(data) {
       updateMix(data);
     });
 
+    // Listeners
     mapSvg.addEventListener('click', () => {
+      updateMix(data);
+    });
+
+    countryListBox.addEventListener('change', () => {
+      updateMix(data);
+    });
+
+    document.getElementById('map-deselect-btn').addEventListener('click', () => {
       updateMix(data);
     });
 }

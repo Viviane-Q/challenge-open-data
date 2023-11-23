@@ -55,7 +55,16 @@ Main page grid layout
 #mix-title {
   margin-bottom: 1.5rem;
 }
+#map-title-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+}
 
+#report-container {
+  margin-top: 20px;
+}
 
 /*
 Components styling
@@ -88,6 +97,10 @@ hr {
 
 #res-btn {
   background-color: #dc7830;
+}
+
+#map-deselect-btn {
+  width: fit-content;
 }
 
 /*
