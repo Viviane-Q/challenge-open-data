@@ -36,6 +36,33 @@ const curveSvg = document.querySelector('#curve-chart');
 
 // svg.on('mouseover', hoverChart)
 
+let consumptionPoints = [];
+let productionPoints = [];
+let reservesPoints = [];
+
+function calculateValues() {
+    consumptionPoints = [];
+    productionPoints = [];
+    reservesPoints = [];
+    for (const [year, countries] of Object.entries(data)) {
+        let productedTT = 0;
+        let consumedTT = 0;
+        let reserveTT = 0;
+        for (const [country, values] of Object.entries(countries)) {
+            if (selectedCountries.includes(country) || selectedCountries.length === 0) {
+                productedTT += values.production ? values.production : 0;
+                consumedTT += values.consumption ? values.consumption : 0;
+                reserveTT += values.reserves ? values.reserves : 0;
+            }
+        }
+        consumptionPoints.push({ xpoint: parseInt(year.substring(1)), ypoint: Math.round(consumedTT) });
+        productionPoints.push({ xpoint: year.substring(1), ypoint: Math.round(productedTT) });
+        if (Math.round(reserveTT) != 0) {
+            reservesPoints.push({ xpoint: year.substring(1), ypoint: Math.round(reserveTT) });
+        }
+    }
+}
+
 function drawChart(data) {
     const svg = d3.select(document.getElementById('curve-chart'));
     svg.selectAll('*').remove();
@@ -69,15 +96,14 @@ function drawChart(data) {
                 .range([height / 2, 0]);
             const consumption = numberWithSpaces(Math.floor(yScale.invert(YMousetPosition)));
             const year = xScale.invert(xMousePosition).getFullYear();
-            const tooltipContent = `
-                <div>Year: ${year}</div>
-                <div>${curveEnergyType[selectedEnergyType].legend}: ${consumption}</div>
+            const tooltipContent = `Year: ${year}\r\n
+                ${curveEnergyType[selectedEnergyType].legend}: ${consumption}
             `;
             console.log(tooltipContent);
             tooltip
-            .html(tooltipContent)
-            .style('left', d3.event.pageX + 'px')
-            .style('top', d3.event.pageY + 'px')
+            .text(tooltipContent)
+            .style('left', d3.event.pageX + 15 + 'px')
+            .style('top', d3.event.pageY - 150 + 'px')
             .transition()
             .duration(400)
             .style('opacity', 1)
@@ -91,6 +117,14 @@ function drawChart(data) {
     const leaveChart = () => {
         tooltip.transition().duration(300).style('opacity', 0);
 
+    }
+    let color = ""
+    if(selectedEnergyType == "consumption"){
+        color = "#2a5c9d"
+    } else if(selectedEnergyType == "production"){
+        color = "#238358"
+    } else {
+        color = "#dc7830"
     }
 
     svg.append("path").datum(data)
@@ -108,54 +142,54 @@ function drawChart(data) {
         .attr("cy", function (d) { return y(d.ypoint) })
         .attr("r", 5)
         .attr("transform", "translate(30,0)")
-        .attr("fill", "#69b3a2")
+        .attr("fill", color)
         .on('mouseover', hoverChart)
         .on('mouseleave', leaveChart)
     curveSvg.style.overflow = 'visible';
 }
 
-function curveReady(selectedEnergyType, data) {
-    curveTitle.innerText = curveEnergyType[selectedEnergyType].title
+function curveReady( data) {
+    curveTitle.innerText = curveEnergyType[selectedEnergyType].title;
 
-    let consumptionPoints = [];
-    let productionPoints = [];
-    let reservesPoints = [];
-    for (const [year, countries] of Object.entries(data)) {
-        let productedTT = 0;
-        let consumedTT = 0;
-        let reserveTT = 0;
-        for (const [country, values] of Object.entries(countries)) {
-            productedTT += values.production ? values.production : 0;
-            consumedTT += values.consumption ? values.consumption : 0;
-            reserveTT += values.reserves ? values.reserves : 0;
-        }
-        consumptionPoints.push({ xpoint: parseInt(year.substring(1)), ypoint: Math.round(consumedTT) });
-        productionPoints.push({ xpoint: year.substring(1), ypoint: Math.round(productedTT) });
-        if (Math.round(reserveTT) != 0) {
-            reservesPoints.push({ xpoint: year.substring(1), ypoint: Math.round(reserveTT) });
-        }
-    }
+    calculateValues();
 
-    drawChart(consumptionPoints);
+    drawChart(consumptionPoints, "consumption");
 
     for (let i = 0; i < energyBtn.length; i++) {
         energyBtn[i].addEventListener('click', () => {
             selectedEnergyType = energyBtn[i].getAttribute('energy-type');
-            // drawLegend();
-            // world.selectAll('path').attr('fill', function(d) {
-            //     return fillMap(d, yearSlider.value);
-            // });
+            console.log(selectedEnergyType);
+            calculateValues();
             curveTitle.innerText = curveEnergyType[selectedEnergyType].title;
             if (selectedEnergyType === "consumption") {
-                drawChart(consumptionPoints);
+                drawChart(consumptionPoints, selectedEnergyType);
             } else if (selectedEnergyType === "production") {
-                drawChart(productionPoints);
+                drawChart(productionPoints, selectedEnergyType);
             } else {
-                drawChart(reservesPoints);
+                drawChart(reservesPoints, selectedEnergyType);
             }
         });
     }
-
-    
-    
+    countryListBox.addEventListener('change', () => {
+        calculateValues();
+        curveTitle.innerText = curveEnergyType[selectedEnergyType].title;
+        if (selectedEnergyType === "consumption") {
+            drawChart(consumptionPoints, selectedEnergyType);
+        } else if (selectedEnergyType === "production") {
+            drawChart(productionPoints, selectedEnergyType);
+        } else {
+            drawChart(reservesPoints, selectedEnergyType);
+        }
+    });  
+    mapSvg.addEventListener('click', () => {
+        calculateValues();
+        curveTitle.innerText = curveEnergyType[selectedEnergyType].title;
+        if (selectedEnergyType === "consumption") {
+            drawChart(consumptionPoints, selectedEnergyType);
+        } else if (selectedEnergyType === "production") {
+            drawChart(productionPoints, selectedEnergyType);
+        } else {
+            drawChart(reservesPoints, selectedEnergyType);
+        }
+    });
 }
