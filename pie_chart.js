@@ -84,7 +84,7 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
   });
 
   // update title
-  pieChartTitle.innerHTML = `Part de ${selectedEnergyType} du monde ${yearSlider.value}`;
+  pieChartTitle.innerHTML = `Worldwide share of Oils ${selectedEnergyType} in ${yearSlider.value}`;
   /* ------- Drawing pie chart -------*/
 
   var data_ready = pie(d3.entries(data));
@@ -194,7 +194,7 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
   slice.exit().remove();
 
   function calculatePercentage(value) {
-    return Math.round((value / total) * 100);
+    return ((value / total) * 100).toFixed(2);
   }
 
   // Text labels
@@ -344,6 +344,7 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
     })
     .attr("dy", ".35em")
     .style("text-anchor", "middle")
+    .style("font-size", "0.8em")
     .style("color", "white")
     .text(function (d) {
       return calculatePercentage(d.data.value[selectedEnergyType]);
