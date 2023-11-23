@@ -70,6 +70,26 @@ hr {
   overflow-y: scroll;
 }
 
+.energy-btn {
+  border: none;
+}
+
+.energy-btn:hover {
+  background-image: linear-gradient(rgb(0 0 0/30%) 0 0);
+}
+
+#cons-btn {
+  background-color: #2a5c9d;
+}
+
+#prod-btn {
+  background-color: #238358;
+}
+
+#res-btn {
+  background-color: #dc7830;
+}
+
 /*
 Map styling
 */

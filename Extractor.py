@@ -44,7 +44,7 @@ with open('./Data/oil-proved-reserves.csv', newline='') as csvfile:
         if code != "":
             year = row["Year"]
             country_code = row["Code"]
-            reserves = float(row["Oil proved reserves - BBL"])
+            reserves = float(row["Oil proved reserves - BBL"]) / 1000000
             country = row["Entity"]
 
             if year not in result:

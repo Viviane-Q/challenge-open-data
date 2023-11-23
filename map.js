@@ -2,26 +2,32 @@ const energyType = {
   consumption: {
     colorScale: d3
       .scaleThreshold()
-      .domain([100, 300, 500, 1000, 3000, 5000])
+      .domain([300, 500, 1000, 3000, 5000, 10000])
       .range(d3.schemeBlues[7]),
     legend: 'Consumption (TWh)',
     title: (year) => `Oil Consumption (TWh) in the world in ${year}`,
+    unit: 'TWh',
+    perCapitaUnit: 'MWh',
   },
   production: {
     colorScale: d3
       .scaleThreshold()
       .domain([100, 300, 500, 1000, 3000, 5000])
-      .range(d3.schemeReds[7]),
+      .range(d3.schemeGreens[7]),
     legend: 'Production (TWh)',
     title: (year) => `Oil Production (TWh) in the world in ${year}`,
+    unit: 'TWh',
+    perCapitaUnit: 'MWh',
   },
   reserves: {
     colorScale: d3
       .scaleThreshold()
-      .domain([100000, 1000000, 10000000, 30000000, 100000000, 500000000])
-      .range(d3.schemeGreens[7]),
-    legend: 'Reserves (Barrels)',
-    title: (year) => `Oil Reserves (Barrels) in the world in ${year}`,
+      .domain([500, 1000, 3000, 5000, 10000, 30000])
+      .range(d3.schemeOranges[7]),
+    legend: 'Reserves (Milion Barrels)',
+    title: (year) => `Oil Reserves (Milion Barrels) in the world in ${year}`,
+    unit: 'Milion Barrels',
+    perCapitaUnit: 'Barrels',
   },
 };
 
@@ -89,8 +95,10 @@ function ready(error, topo) {
       .duration(400)
       .style('opacity', 1)
       .text(
-        `${d.properties.name}\r\n Total: ${d.value ?? 'NA'}\r\n Per Capita: ${
-          d.value && d.population ? (d.value / d.population).toFixed(2) : 'NA' // TODO change unit
+        `${d.properties.name}\r\n Total: ${d.value ? d.value.toFixed(2) + ' ' + energyType[selectedEnergyType].unit : 'NA'
+        }\r\n Per Capita: ${d.value && d.population
+          ? ((d.value * 1000000) / d.population).toFixed(2) + ' ' + energyType[selectedEnergyType].perCapitaUnit
+          : 'NA'
         }`
       );
   };
@@ -110,7 +118,7 @@ function ready(error, topo) {
   // Select or deselect country
   function clickCountry(d) {
     let countryElement;
-    if (typeof countryElement === 'number') { 
+    if (typeof countryElement === 'number') {
       // if click is triggered through map
       countryElement = this;
     } else {
@@ -161,7 +169,7 @@ function ready(error, topo) {
 
   const fillCountryList = () => {
     countryListBox.innerHTML = '';
-    for(const country of topo[0].features) {
+    for (const country of topo[0].features) {
       const countryId = country.id;
       const countryName = country.properties.name;
 
@@ -178,10 +186,10 @@ function ready(error, topo) {
       const label = document.createElement('label');
       label.appendChild(input);
       label.appendChild(document.createTextNode(countryName));
-  
+
       const li = document.createElement('li');
       li.appendChild(label);
-  
+
       countryListBox.appendChild(li);
     }
   };
@@ -207,7 +215,6 @@ function ready(error, topo) {
         yearSlider.value
       );
       updatePieChart(data.get(yearSlider.value), selectedEnergyType, selectedCountries);
-      
     });
   }
 
@@ -248,7 +255,6 @@ function ready(error, topo) {
     .on('click', clickCountry);
 
   fillCountryList();
-  
 
   const drawLegend = () => {
     const legendSize = 20;
@@ -300,7 +306,7 @@ function ready(error, topo) {
         if (d[1] < d[0]) return d[0] + ' +';
         return d[0] + ' - ' + d[1];
       });
-    
+
     // undefined values color
     legend
       .append('rect')
@@ -308,12 +314,12 @@ function ready(error, topo) {
       .attr('width', legendSize)
       .attr('height', legendSize)
       .style('fill', 'grey');
-    
+
     // undefined values legend text
     legend
       .append('text')
       .attr('x', 30)
-      .attr('y', height - legendSize * 2-3)
+      .attr('y', height - legendSize * 2 - 3)
       .text('NA');
   };
 
