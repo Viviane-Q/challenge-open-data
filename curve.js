@@ -70,7 +70,7 @@ function curveReady(selectedEnergyType, data) {
         .call(d3.axisBottom(x));
     // Add Y axis
     var y = d3.scaleLinear()
-        .domain([0, d3.max(consumptionPoints, function (d) { return d.ypoint; })])
+        .domain([d3.min(consumptionPoints, function (d) { return d.ypoint; }), d3.max(consumptionPoints, function (d) { return d.ypoint; })])
         .range([height / 2, 0]);
     svg.append("g")
         .attr("transform", "translate(50,0)")
@@ -133,7 +133,7 @@ function curveReady(selectedEnergyType, data) {
         .attr("fill", "#69b3a2")
         .on('mouseover', hoverChart)
         .on('mouseleave', leaveChart)
-
+    curveSvg.style.overflow = 'visible';
 
 
     for (let i = 0; i < energyBtn.length; i++) {
