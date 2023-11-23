@@ -34,43 +34,21 @@ const curveTitle = document.querySelector('#curve-title');
 const curveSvg = document.querySelector('#curve-chart');
 
 
-
-
-const svg = d3.select(document.getElementById('curve-chart'));
 // svg.on('mouseover', hoverChart)
 
-function curveReady(selectedEnergyType, data) {
-    console.log("curve ready");
-    curveTitle.innerText = curveEnergyType[selectedEnergyType].title
-
-    console.log(data)
-    let consumptionPoints = [];
-    let productionPoints = [];
-    let reservesPoints = [];
-    for (const [year, countries] of Object.entries(data)) {
-        let productedTT = 0;
-        let consumedTT = 0;
-        let reserveTT = 0;
-        for (const [country, values] of Object.entries(countries)) {
-            productedTT += values.production ? values.production : 0;
-            consumedTT += values.consumption ? values.consumption : 0;
-            reserveTT += values.reserves ? values.reserves : 0;
-        }
-        consumptionPoints.push({ xpoint: parseInt(year.substring(1)), ypoint: Math.round(consumedTT) });
-        productionPoints.push({ xpoint: year.substring(1), ypoint: Math.round(productedTT) });
-        reservesPoints.push({ xpoint: year.substring(1), ypoint: Math.round(reserveTT) });
-    }
-    console.log(consumptionPoints);
+function drawChart(data) {
+    const svg = d3.select(document.getElementById('curve-chart'));
+    svg.selectAll('*').remove();
     // Add X axis --> it is a date format
     var x = d3.scaleTime()
-        .domain(d3.extent(consumptionPoints, function (d) { return new Date(d.xpoint, 0, 1); }))
-        .range([20, width - 50]);
+    .domain(d3.extent(data, function (d) { return new Date(d.xpoint, 0, 1); }))
+    .range([20, width - 50]);
     svg.append("g")
         .attr("transform", "translate(30," + height / 2 + ")")
         .call(d3.axisBottom(x));
     // Add Y axis
     var y = d3.scaleLinear()
-        .domain([d3.min(consumptionPoints, function (d) { return d.ypoint; }), d3.max(consumptionPoints, function (d) { return d.ypoint; })])
+        .domain([d3.min(data, function (d) { return d.ypoint; }), d3.max(data, function (d) { return d.ypoint; })])
         .range([height / 2, 0]);
     svg.append("g")
         .attr("transform", "translate(50,0)")
@@ -83,11 +61,11 @@ function curveReady(selectedEnergyType, data) {
     const hoverChart = (d) => {
             const xMousePosition = d3.mouse(svg.node())[0] - 30;
             const xScale = d3.scaleTime()
-                .domain(d3.extent(consumptionPoints, function (d) { return new Date(d.xpoint, 0, 1); }))
+                .domain(d3.extent(data, function (d) { return new Date(d.xpoint, 0, 1); }))
                 .range([20, width - 50]);
             const YMousetPosition = d3.mouse(svg.node())[1];
             const yScale = d3.scaleLinear()
-                .domain([0, d3.max(consumptionPoints, function (d) { return d.ypoint; })])
+                .domain([0, d3.max(data, function (d) { return d.ypoint; })])
                 .range([height / 2, 0]);
             const consumption = numberWithSpaces(Math.floor(yScale.invert(YMousetPosition)));
             const year = xScale.invert(xMousePosition).getFullYear();
@@ -115,7 +93,7 @@ function curveReady(selectedEnergyType, data) {
 
     }
 
-    svg.append("path").datum(consumptionPoints)
+    svg.append("path").datum(data)
         .attr("fill", "none")
         .attr("transform", "translate(30,0)")
         .attr("stroke", "steelblue")
@@ -123,7 +101,7 @@ function curveReady(selectedEnergyType, data) {
         .attr("d", Gen);
     svg.append("g")
         .selectAll("dot")
-        .data(consumptionPoints)
+        .data(data)
         .enter()
         .append("circle")
         .attr("cx", function (d) { return x(new Date(d.xpoint, 0, 1)) })
@@ -134,7 +112,31 @@ function curveReady(selectedEnergyType, data) {
         .on('mouseover', hoverChart)
         .on('mouseleave', leaveChart)
     curveSvg.style.overflow = 'visible';
+}
 
+function curveReady(selectedEnergyType, data) {
+    curveTitle.innerText = curveEnergyType[selectedEnergyType].title
+
+    let consumptionPoints = [];
+    let productionPoints = [];
+    let reservesPoints = [];
+    for (const [year, countries] of Object.entries(data)) {
+        let productedTT = 0;
+        let consumedTT = 0;
+        let reserveTT = 0;
+        for (const [country, values] of Object.entries(countries)) {
+            productedTT += values.production ? values.production : 0;
+            consumedTT += values.consumption ? values.consumption : 0;
+            reserveTT += values.reserves ? values.reserves : 0;
+        }
+        consumptionPoints.push({ xpoint: parseInt(year.substring(1)), ypoint: Math.round(consumedTT) });
+        productionPoints.push({ xpoint: year.substring(1), ypoint: Math.round(productedTT) });
+        if (Math.round(reserveTT) != 0) {
+            reservesPoints.push({ xpoint: year.substring(1), ypoint: Math.round(reserveTT) });
+        }
+    }
+
+    drawChart(consumptionPoints);
 
     for (let i = 0; i < energyBtn.length; i++) {
         energyBtn[i].addEventListener('click', () => {
@@ -143,7 +145,14 @@ function curveReady(selectedEnergyType, data) {
             // world.selectAll('path').attr('fill', function(d) {
             //     return fillMap(d, yearSlider.value);
             // });
-            curveTitle.innerText = curveEnergyType[selectedEnergyType].title
+            curveTitle.innerText = curveEnergyType[selectedEnergyType].title;
+            if (selectedEnergyType === "consumption") {
+                drawChart(consumptionPoints);
+            } else if (selectedEnergyType === "production") {
+                drawChart(productionPoints);
+            } else {
+                drawChart(reservesPoints);
+            }
         });
     }
 
