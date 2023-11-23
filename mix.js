@@ -17,8 +17,6 @@ const mixWidth = width/2
 const mixHeight = height/2
 const mixMargin = width/30
 
-console.log(mixWidth, mixHeight, mixMargin)
-
 // radius of pieplot is half the mixWidth or half the mixHeight (smallest one)
 var donutRadius = mixHeight / 2 - mixMargin
 
@@ -45,6 +43,10 @@ const centerText = mixSvg.append("text")
 
 // center text dynamic update
 function updateCenterText(newText) {
+  // Si le texte contient NaN, on le remplace par "No data"
+  if (newText.includes("NaN")) {
+    newText = "No data";
+  }
   centerText.text(newText);
 }
 
@@ -110,7 +112,16 @@ function mixReady(data) {
       updateMix(data);
     });
 
+    // Listeners
     mapSvg.addEventListener('click', () => {
+      updateMix(data);
+    });
+
+    countryListBox.addEventListener('change', () => {
+      updateMix(data);
+    });
+
+    document.getElementById('map-deselect-btn').addEventListener('click', () => {
       updateMix(data);
     });
 }
