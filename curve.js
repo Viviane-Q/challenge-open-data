@@ -99,7 +99,6 @@ function drawChart(data) {
             const tooltipContent = `Year: ${year}\r\n
                 ${curveEnergyType[selectedEnergyType].legend}: ${consumption}
             `;
-            console.log(tooltipContent);
             tooltip
             .text(tooltipContent)
             .style('left', d3.event.pageX + 15 + 'px')
@@ -158,7 +157,6 @@ function curveReady( data) {
     for (let i = 0; i < energyBtn.length; i++) {
         energyBtn[i].addEventListener('click', () => {
             selectedEnergyType = energyBtn[i].getAttribute('energy-type');
-            console.log(selectedEnergyType);
             calculateValues();
             curveTitle.innerText = curveEnergyType[selectedEnergyType].title;
             if (selectedEnergyType === "consumption") {

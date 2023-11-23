@@ -105,7 +105,6 @@ function updateMix(data) {
 
 
 function mixReady(data) {
-    console.log("mix ready");
     updateMix(data);
 
     yearSlider.addEventListener('input', () => {
