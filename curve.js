@@ -1,3 +1,7 @@
+function numberWithSpaces(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 const curveEnergyType = {
     consumption: {
         colorScale: d3
@@ -31,7 +35,9 @@ const curveSvg = document.querySelector('#curve-chart');
 
 
 
-const svg = d3.select(document.getElementById('curve-chart'))
+
+const svg = d3.select(document.getElementById('curve-chart'));
+// svg.on('mouseover', hoverChart)
 
 function curveReady(selectedEnergyType, data) {
     console.log("curve ready");
@@ -74,14 +80,61 @@ function curveReady(selectedEnergyType, data) {
     var Gen = d3.line()
         .x((p) => x(new Date(p.xpoint, 0, 1)))
         .y((p) => y(p.ypoint))
-        .curve(d3.curveBasis);
+    const hoverChart = (d) => {
+            const xMousePosition = d3.mouse(svg.node())[0] - 30;
+            const xScale = d3.scaleTime()
+                .domain(d3.extent(consumptionPoints, function (d) { return new Date(d.xpoint, 0, 1); }))
+                .range([20, width - 50]);
+            const YMousetPosition = d3.mouse(svg.node())[1];
+            const yScale = d3.scaleLinear()
+                .domain([0, d3.max(consumptionPoints, function (d) { return d.ypoint; })])
+                .range([height / 2, 0]);
+            const consumption = numberWithSpaces(Math.floor(yScale.invert(YMousetPosition)));
+            const year = xScale.invert(xMousePosition).getFullYear();
+            const tooltipContent = `
+                <div>Year: ${year}</div>
+                <div>${curveEnergyType[selectedEnergyType].legend}: ${consumption}</div>
+            `;
+            console.log(tooltipContent);
+            tooltip
+            .html(tooltipContent)
+            .style('left', d3.event.pageX + 'px')
+            .style('top', d3.event.pageY + 'px')
+            .transition()
+            .duration(400)
+            .style('opacity', 1)
+            .style('display', 'block')
+            .style('background-color', 'white')
+            .style('border', '1px solid black')
+            .style('padding', '5px')
+            .style('border-radius', '5px')
+            .style('pointer-events', 'none')
+    }
+    const leaveChart = () => {
+        tooltip.transition().duration(300).style('opacity', 0);
+
+    }
 
     svg.append("path").datum(consumptionPoints)
         .attr("fill", "none")
         .attr("transform", "translate(30,0)")
         .attr("stroke", "steelblue")
-        .attr("stroke-width", 1.5)
+        .attr("stroke-width", 2)
         .attr("d", Gen);
+    svg.append("g")
+        .selectAll("dot")
+        .data(consumptionPoints)
+        .enter()
+        .append("circle")
+        .attr("cx", function (d) { return x(new Date(d.xpoint, 0, 1)) })
+        .attr("cy", function (d) { return y(d.ypoint) })
+        .attr("r", 5)
+        .attr("transform", "translate(30,0)")
+        .attr("fill", "#69b3a2")
+        .on('mouseover', hoverChart)
+        .on('mouseleave', leaveChart)
+
+
 
     for (let i = 0; i < energyBtn.length; i++) {
         energyBtn[i].addEventListener('click', () => {
@@ -93,4 +146,7 @@ function curveReady(selectedEnergyType, data) {
             curveTitle.innerText = curveEnergyType[selectedEnergyType].title
         });
     }
+
+    
+    
 }
