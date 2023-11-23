@@ -192,4 +192,15 @@ function curveReady( data) {
             drawChart(reservesPoints, selectedEnergyType);
         }
     });
+    document.getElementById('map-deselect-btn').addEventListener('click', () => {
+        calculateValues();
+        curveTitle.innerText = curveEnergyType[selectedEnergyType].title;
+        if (selectedEnergyType === "consumption") {
+            drawChart(consumptionPoints, selectedEnergyType);
+        } else if (selectedEnergyType === "production") {
+            drawChart(productionPoints, selectedEnergyType);
+        } else {
+            drawChart(reservesPoints, selectedEnergyType);
+        }
+    });
 }
