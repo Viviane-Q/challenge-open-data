@@ -103,7 +103,7 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
   });
 
   // update title
-  pieChartTitle.innerHTML = `Worldwide share of Oils ${selectedEnergyType} in ${yearSlider.value}`;
+  pieChartTitle.innerHTML = `Global share of oil ${selectedEnergyType} in ${yearSlider.value}`;
   /* ------- Drawing pie chart -------*/
 
   var data_ready = pie(d3.entries(data));

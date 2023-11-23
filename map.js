@@ -5,7 +5,7 @@ const energyType = {
       .domain([300, 500, 1000, 3000, 5000, 10000])
       .range(d3.schemeBlues[7]),
     legend: 'Consumption (TWh)',
-    title: (year) => `Global oil Consumption (TWh) in ${year}`,
+    title: (year) => `Global oil consumption (TWh) in ${year}`,
     unit: 'TWh',
     perCapitaUnit: 'MWh',
   },
@@ -15,7 +15,7 @@ const energyType = {
       .domain([100, 300, 500, 1000, 3000, 5000])
       .range(d3.schemeGreens[7]),
     legend: 'Production (TWh)',
-    title: (year) => `Global oil Production (TWh) in ${year}`,
+    title: (year) => `Global oil production (TWh) in ${year}`,
     unit: 'TWh',
     perCapitaUnit: 'MWh',
   },
@@ -25,7 +25,7 @@ const energyType = {
       .domain([500, 1000, 3000, 5000, 10000, 30000])
       .range(d3.schemeOranges[7]),
     legend: 'Reserves (Milion Barrels)',
-    title: (year) => `Global oil Reserves (Milion Barrels) in ${year}`,
+    title: (year) => `Global oil reserves (Milion Barrels) in ${year}`,
     unit: 'Milion Barrels',
     perCapitaUnit: 'Barrels',
   },
