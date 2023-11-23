@@ -66,12 +66,12 @@ function curveReady(selectedEnergyType, data) {
         .domain(d3.extent(consumptionPoints, function (d) { return new Date(d.xpoint, 0, 1); }))
         .range([20, width - 50]);
     svg.append("g")
-        .attr("transform", "translate(30," + height / 2 + ")")
+        .attr("transform", `translate(30, ${height / 2 - 24})`)
         .call(d3.axisBottom(x));
     // Add Y axis
     var y = d3.scaleLinear()
         .domain([d3.min(consumptionPoints, function (d) { return d.ypoint; }), d3.max(consumptionPoints, function (d) { return d.ypoint; })])
-        .range([height / 2, 0]);
+        .range([height / 2 - 24, 0]);
     svg.append("g")
         .attr("transform", "translate(50,0)")
         .call(d3.axisLeft(y));
