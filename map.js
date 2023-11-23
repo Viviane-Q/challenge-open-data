@@ -5,7 +5,7 @@ const energyType = {
       .domain([300, 500, 1000, 3000, 5000, 10000])
       .range(d3.schemeBlues[7]),
     legend: 'Consumption (TWh)',
-    title: (year) => `Oil Consumption (TWh) in the world in ${year}`,
+    title: (year) => `Global oil Consumption (TWh) in ${year}`,
     unit: 'TWh',
     perCapitaUnit: 'MWh',
   },
@@ -15,7 +15,7 @@ const energyType = {
       .domain([100, 300, 500, 1000, 3000, 5000])
       .range(d3.schemeGreens[7]),
     legend: 'Production (TWh)',
-    title: (year) => `Oil Production (TWh) in the world in ${year}`,
+    title: (year) => `Global oil Production (TWh) in ${year}`,
     unit: 'TWh',
     perCapitaUnit: 'MWh',
   },
@@ -25,7 +25,7 @@ const energyType = {
       .domain([500, 1000, 3000, 5000, 10000, 30000])
       .range(d3.schemeOranges[7]),
     legend: 'Reserves (Milion Barrels)',
-    title: (year) => `Oil Reserves (Milion Barrels) in the world in ${year}`,
+    title: (year) => `Global oil Reserves (Milion Barrels) in ${year}`,
     unit: 'Milion Barrels',
     perCapitaUnit: 'Barrels',
   },
@@ -149,6 +149,7 @@ function ready(error, topo) {
 
   // Add clickable background
   const clickBackground = () => {
+    if (selectedCountries.length === 0) return;
     // deselect all countries when clicking background
     selectedCountries.length = 0;
     countryListBox
@@ -158,6 +159,11 @@ function ready(error, topo) {
     tooltip.transition().duration(300).style('opacity', 0);
     updatePieChart(data.get(yearSlider.value), selectedEnergyType, []);
   };
+
+  // Add deselect button
+  document.getElementById('map-deselect-btn').addEventListener('click', () => {
+    clickBackground();
+  });
 
   const fillMap = (d, year) => {
     const dataYear = data.get(year);

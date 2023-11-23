@@ -90,6 +90,11 @@ hr {
   background-color: #dc7830;
 }
 
+#map-deselect-btn {
+  width: fit-content;
+  margin-left: auto;
+}
+
 /*
 Map styling
 */
