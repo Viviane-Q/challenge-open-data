@@ -62,6 +62,10 @@ Main page grid layout
   justify-content: space-between;
 }
 
+#report-container {
+  margin-top: 20px;
+}
+
 /*
 Components styling
 */

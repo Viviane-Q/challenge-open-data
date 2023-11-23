@@ -20,14 +20,34 @@
             <li><a href="rapport.html">Report (Fr)</a></li>
         </ul>
     </nav>
-    <hr class="divider"/>
-    <div class="container-fluid">
+    <hr class="divider" />
+    <div class="container" id="report-container">
         <article>
             <h5>Présentation</h5>
-            
+            <p>
+                Ce site présente des visualisation autour de l'usage du pétrole dans le monde. L'objectif est de mettre
+                en
+                avant les différences entre les pays et les évolutions au cours du temps ainsi que l'importance du
+                pétrole
+                dans le mix énergétique mondial.
+            </p>
         </article>
         <article>
             <h5>Source des données</h5>
+            <p>
+                Energy Institute met à disposition un classeur Excel qui recense les données énergétiques dans le monde.
+                Nous exploitons les feuilles “Oil: Proved reserves - Barrels (from 1980)”, et “Oil: Production -
+                Tonnes (from 1965)” et “Oil: Consumption - Tonnes (from 1965)” pour les données pétrolières. Nous
+                utilisons
+                également les données de consommation des autres sources d'énergie pour faire ressortir la part du
+                pétrole dans le mix énergétique mondial et par pays. La source est disponible sur le lien suivant :
+                <a>https://www.energyinst.org/statistical-review/resources-and-data-downloads</a>
+            </p>
+            <p>
+                Nous utilisons l'évolution de la population par pays 1860-2021 pour calculer les données par habitant
+                :
+                <a>https://ourworldindata.org/grapher/population?time=1860..latest</a>
+            </p>
         </article>
         <article>
             <h5>Traitements opérés</h5>
@@ -37,6 +57,14 @@
         </article>
         <article>
             <h5>Choix des technologies</h5>
+            <p>Les données sont extraites et traitées une fois en Python puis stockées dans un fichier JSON de manière à
+                faciliter la
+                lecture et l'affichage.</p>
+            <p>La page web est écrite en HTML, CSS et JavaScript. On utilise également la bibliothèque minimaliste
+                <a>https://picocss.com/</a> pour gagner du temps sur le style des éléments de notre interface et la
+                bibliothèque d3.js pour créer les
+                graphes.
+            </p>
         </article>
         <article>
             <h5>Analyse GreenIT</h5>
