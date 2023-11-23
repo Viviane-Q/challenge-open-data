@@ -38,7 +38,7 @@ var key = function (d) {
   return d.data.key;
 };
 
-var pieChartColor = d3.scaleOrdinal().range(d3.schemeCategory10);
+var pieChartColor = d3.scaleOrdinal().range(["#4e79a7","#f28e2c","#e15759","#76b7b2","#59a14f","#808080"]);
 
 // update pie chart
 function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
@@ -59,7 +59,7 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
       }
     });
     // take only 3 first elements
-    data = data.slice(0, 3);
+    data = data.slice(0, 5);
     sum = data.reduce((accumulator, currentValue) => {
       return accumulator + currentValue[1][selectedEnergyType];
     }, 0);
