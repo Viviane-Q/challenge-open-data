@@ -49,6 +49,14 @@ function removePieChart() {
   pieChartSvg.selectAll("percentage").remove();
 }
 
+
+// add tooltip
+const pieChartTooltip = d3
+  .select('body')
+  .append('div')
+  .attr('class', 'map-tooltip')
+  .style('opacity', 0);
+
 // update pie chart
 function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
   let data = {};
@@ -114,7 +122,7 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
   // hover opacity of the slices
   var opacityHover = 1;
   // hover opacity of other slices
-  var otherOpacityOnHover = 0.6;
+  var otherOpacityOnHover = 0.5;
   // margin of the tooltip
   var tooltipMargin = 5;
 
@@ -140,59 +148,24 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
         .attr("class", "tooltip")
         .style("opacity", 0);
 
-      g.append("text")
-        .attr("class", "name-text")
-        //bigger font for country name
-        .style("font-size", "25px")
+
+        pieChartTooltip
+        .style('left', d3.event.pageX + 15 + 'px')
+        .style('top', d3.event.pageY - 28 + 'px')
+        .transition()
+        .duration(400)
+        .style('opacity', 1)
         .text(
           `${d.data.value.country} (${calculatePercentage(
             d.data.value[selectedEnergyType]
           )}%)`
         )
-        .attr("text-anchor", "middle");
-
-      let text = g.select("text");
-      let bbox = text.node().getBBox();
-      let padding = 1;
-      g.insert("rect", "text")
-        .attr("x", bbox.x - padding)
-        .attr("y", bbox.y - padding)
-        .attr("width", bbox.width + padding * 2)
-        .attr("height", bbox.height + padding * 2)
-        .style("fill", "white")
-        .style("opacity", 0.8)
-        .attr("rx", 5)
-        .style("stroke", "black")
-        .style("stroke-width", 1);
-    })
-    .on("mousemove", function (d) {
-      let mousePosition = d3.mouse(this);
-      let x = mousePosition[0] + width / 2 - tooltipMargin - 50;
-      let y = mousePosition[1] + height / 2 - tooltipMargin;
-
-      let text = d3.select(".tooltip text");
-      let bbox = text.node().getBBox();
-      if (x - bbox.width / 2 < 0) {
-        x = bbox.width / 2;
-      } else if (width - x - bbox.width / 2 < 0) {
-        x = width - bbox.width / 2;
-      }
-
-      if (y - bbox.height / 2 < 0) {
-        y = bbox.height + tooltipMargin * 2;
-      } else if (height - y - bbox.height / 2 < 0) {
-        y = height - bbox.height / 2;
-      }
-
-      d3.select(".tooltip")
-        .style("opacity", 1)
-        .attr("transform", `translate(${x}, ${y})`);
     })
     .on("mouseout", function (d) {
+      pieChartTooltip.transition().duration(300).style('opacity', 0);
+
       d3.select("#pie-chart")
         .style("cursor", "default")
-        .select(".tooltip")
-        .remove();
       d3.selectAll("#pie-chart path").style("opacity", opacity);
     })
     .transition()
