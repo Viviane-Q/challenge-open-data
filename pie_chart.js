@@ -43,11 +43,20 @@ var pieChartColor = d3
   .range(["#4e79a7", "#f28e2c", "#e15759", "#76b7b2", "#59a14f", "#808080"]);
 
 function removePieChart() {
-  pieChartSvg.selectAll("path").remove();
-  pieChartSvg.selectAll("line").remove();
-  pieChartSvg.selectAll("text").remove();
-  pieChartSvg.selectAll("percentage").remove();
+  pieChartSvg.selectAll(".slices path").remove();
+  pieChartSvg.selectAll(".lines line").remove();
+  pieChartSvg.selectAll(".labels text").remove();
+  pieChartSvg.selectAll(".percentage percentage").remove();
+  noDataText.style("opacity", 1);
 }
+
+const noDataText = pieChartSvg.append("text")
+    .attr("text-anchor", "middle")
+    .attr("font-size", "2em")
+    .attr("font-weight", "bold")
+    .attr("dy", "0.25em")
+    .text("No data")
+    .style("opacity", 0);
 
 
 // add tooltip
@@ -91,6 +100,8 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
       sum += data[i][1][selectedEnergyType];
     }
     data = Object.fromEntries(data);
+
+    
     // When there is selection, display selected countries with others
   } else {
     sum = 0;
@@ -103,7 +114,13 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
         sum += originalData[country][selectedEnergyType];
       }
     });
+    if (sum === 0) {
+      // if there is no data, remove the slices, lines, labels and percentage
+      removePieChart();
+      return;
+    }
   }
+  noDataText.style("opacity", 0);
   data["OWID_WRL"] = { country: "Others" };
   data["OWID_WRL"][selectedEnergyType] = total - sum;
   var pie = d3.pie().value(function (d) {
