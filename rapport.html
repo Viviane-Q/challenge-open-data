@@ -30,10 +30,14 @@
         <article>
             <h5>Présentation</h5>
             <p>
-                Ce site présente des visualisations autour de l'usage du pétrole dans le monde. L'objectif est de mettre en
-                avant les différences entre les pays et les évolutions au cours du temps ainsi que l'importance du pétrole
-                dans le mix énergétique mondial. Cela permettra de montrer l'évolution de la consommation, de la production 
-                et des réserves de pétrole au cours du temps et voir l'enjeu majeur qu'est le pétrole dans la lutte contre le 
+                Ce site présente des visualisations autour de l'usage du pétrole dans le monde. L'objectif est de mettre
+                en
+                avant les différences entre les pays et les évolutions au cours du temps ainsi que l'importance du
+                pétrole
+                dans le mix énergétique mondial. Cela permettra de montrer l'évolution de la consommation, de la
+                production
+                et des réserves de pétrole au cours du temps et voir l'enjeu majeur qu'est le pétrole dans la lutte
+                contre le
                 réchauffement climatique.
             </p>
         </article>
@@ -81,6 +85,78 @@
         </article>
         <article>
             <h5>Analyse GreenIT</h5>
+            <p>
+                L'analyse GreenIT est basée sur l'<a href="https://www.ecoindex.fr/comment-ca-marche/">EcoIndex</a>.
+                Cet indice permet de prendre conscience de l'impact écologique d'un site web au travers de métriques
+                définies sur le site d'EcoIndex :
+                <ul>
+                    <li>
+                        La performance environnementale : représentée par un score sur 100 et une note de A à G. Une note
+                        élevée est synonyme de bonne performance. Notre page web obtient une note de 63.71, ce qui
+                        correspond à une note de C.
+                    </li>
+                    <li>
+                        L'empreinte environnementale : elle comprend les émissions de gaz à effet de serre et la
+                        consommation d’eau générées par la page. Notre page web génère 1.73 g de CO2 et consomme 2.59 cl
+                        d'eau.
+                    </li>
+                    <li>
+                        La complexité de la page : représenté par la taille du DOM (Document Object Model). Plus cette
+                        taille est importante, plus la page est complexe à déchiffrer et à afficher. Le DOM de notre page
+                        web comporte 586 éléments.
+                    </li>
+                    <li>
+                        Le poids des données transférées : dans l'EcoIndex, ce poids correspond à la taille de la page
+                        web puisque ce sont les données qui sont transférées du serveur vers le client. La taille de
+                        notre page web est de 1635 Ko.
+                    </li>
+                    <li>
+                        Le nombre de requêtes http : l'objectif est de limiter le nombre de requêtes http pour limiter
+                        le nombre de connexions au serveur. Notre page web effectue 11 requêtes http trois seulement sont
+                        liées à la librairie d3.js. Le reste étant des requêtes vers des fichiers locaux. Une idée
+                        d'amélioration serait de
+                        regrouper les fichiers locaux en un seul fichier. Mais cela rendrait le code moins lisible.
+                    </li>
+                </ul>
+                
+            </p>
+            <p>
+                Voici le rapport complet de l'analyse GreenIT de notre page web : <br>
+                <img src="./Images/ecoindex.png" alt="" width="600px" height="600px">
+            </p>
+            <p>
+                L'analyse des bonnes pratiques montre plusieurs points d'amélioration :
+                <ul>
+                    <li>
+                        Ressources cachées : certaines ressources utilisées par notre page web ne comporte pas de gestion de
+                        cache. Cela signifie que le comportement du navigateur vis-à-vis de ces ressources n'est pas
+                        déterminé. Il est donc possible que le navigateur ne les mette pas en cache et donc qu'il les
+                        recharge à chaque fois qu'elles sont utilisées. A noter que les deux ressources concernées sont
+                        liées à la librairie d3.js. Nous n'avons donc pas la main sur ces ressources. La seule option pour
+                        corriger cela serait d'utiliser une autre librairie qui gère mieux le cache.
+                    </li>
+                    <li>
+                        Validation du JavaScript : l'analyse montre une erreur dans le fichier map.js. Or, après validation
+                        du code, nous ne constatons pas d'erreur. Une analyse plus détaillée nous aurait permis de
+                        comprendre la source du problème. Mais sans information supplémentaire, nous ne pouvons pas corriger
+                        ce point.
+                    </li>
+                    <li>
+                        Minification des ressources : la minification consiste à supprimer les espaces, les commentaires et
+                        à réduire la taille des noms de variables. Cela permet de réduire la taille des fichiers et donc de
+                        réduire le temps de chargement de la page. L'analyse montre que 7 fichiers JavaScript et CSS n'ont
+                        pas été minifiés. Parmi ces fichiers, 6 sont des fichiers locaux. Nous pouvons donc améliorer notre
+                        empreinte grâce à cette action rapide.
+                    </li>
+                    <li>
+                        Print CSS : les feuilles de style print permettent de définir le style de la page lorsqu'elle est en
+                        mode impression. Cela permet de supprimer les éléments inutiles et de mettre en avant les éléments
+                        importants. Notre page web ne comporte pas de feuille de style print. Cela n'a pas beaucoup d'impact
+                        car notre page n'est pas destinée à être imprimée. Mais cela peut être une amélioration intéressante
+                        si l'on souhaite améliorer notre empreinte.
+                    </li>
+                </ul>
+            </p>
         </article>
     </div>
 </body>
