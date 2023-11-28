@@ -61,6 +61,13 @@ function calculateValues() {
                 reserveTT += values.reserves ? values.reserves : 0;
             }
         }
+        if(reserveTT == 0)
+            reserveTT = null
+        if(productedTT == 0)
+            productedTT = null
+        if(consumedTT == 0) 
+            consumedTT = null
+        
         consumptionPoints.push({ xpoint: parseInt(year.substring(1)), ypoint: Math.round(consumedTT) });
         productionPoints.push({ xpoint: year.substring(1), ypoint: Math.round(productedTT) });
         if (Math.round(reserveTT) != 0) {
