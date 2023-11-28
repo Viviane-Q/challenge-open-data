@@ -24,9 +24,9 @@ const energyType = {
       .scaleThreshold()
       .domain([500, 1000, 3000, 5000, 10000, 30000])
       .range(d3.schemeOranges[7]),
-    legend: 'Reserves (Milion Barrels)',
-    title: (year) => `Global oil reserves (Milion Barrels) in ${year}`,
-    unit: 'Milion Barrels',
+    legend: 'Reserves (Million Barrels)',
+    title: (year) => `Global oil reserves (Million Barrels) in ${year}`,
+    unit: 'Million Barrels',
     perCapitaUnit: 'Barrels',
   },
 };

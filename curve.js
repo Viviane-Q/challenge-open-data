@@ -10,6 +10,8 @@ const curveEnergyType = {
             .range(d3.schemeBlues[7]),
         legend: 'Consumption (TWh)',
         title: `Annual oil consumption (TWh)`,
+        unit: 'TWh',
+        legend_simple: `Consumption`,
     },
     production: {
         colorScale: d3
@@ -18,14 +20,18 @@ const curveEnergyType = {
             .range(d3.schemeReds[7]),
         legend: 'Production (TWh)',
         title: `Annual oil production (TWh)`,
+        unit: 'TWh',
+        legend_simple: `Production`,
     },
     reserves: {
         colorScale: d3
             .scaleThreshold()
             .domain([100000, 1000000, 10000000, 30000000, 100000000, 500000000])
             .range(d3.schemeGreens[7]),
-        legend: 'Reserves (Milion Barrels)',
-        title: `Annual oil reserves (Milion Barrels)`,
+        legend: 'Reserves (Million Barrels)',
+        title: `Annual oil reserves (Million Barrels)`,
+        unit: 'Million Barrels',
+        legend_simple: `Reserves`,
     },
 };
 
@@ -89,7 +95,7 @@ function drawChart(data) {
             const year = d.xpoint;
             let consumption = d.ypoint;
             const tooltipContent = `Year: ${year}\r\n
-                ${curveEnergyType[selectedEnergyType].legend}: ${consumption}
+                ${curveEnergyType[selectedEnergyType].legend_simple}: ${consumption} ${curveEnergyType[selectedEnergyType].unit}
             `;
             tooltip
             .text(tooltipContent)
