@@ -18,7 +18,6 @@ var pieChartSvg = d3.select("#pie-chart").append("g");
 pieChartSvg.append("g").attr("class", "slices");
 pieChartSvg.append("g").attr("class", "labels");
 pieChartSvg.append("g").attr("class", "lines");
-pieChartSvg.append("g").attr("class", "percentage");
 
 var arc = d3
   .arc()
@@ -46,18 +45,15 @@ function removePieChart() {
   pieChartSvg.selectAll(".slices path").remove();
   pieChartSvg.selectAll(".lines line").remove();
   pieChartSvg.selectAll(".labels text").remove();
-  pieChartSvg.selectAll(".percentage percentage").remove();
-  noDataText.style("opacity", 1);
-}
+  pieChartNoDataText= pieChartSvg.append("text")
+      .attr("text-anchor", "middle")
+      .attr("font-size", "2em")
+      .attr("font-weight", "bold")
+      .attr("dy", "0.25em")
+      .text("No data")
+  }
 
-const noDataText = pieChartSvg.append("text")
-    .attr("text-anchor", "middle")
-    .attr("font-size", "2em")
-    .attr("font-weight", "bold")
-    .attr("dy", "0.25em")
-    .text("No data")
-    .style("opacity", 0);
-
+const pieChartNoDataText = null;
 
 // add tooltip
 const pieChartTooltip = d3
@@ -122,7 +118,9 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
       return;
     }
   }
-  noDataText.style("opacity", 0);
+  if (pieChartNoDataText != null){
+    pieChartNoDataText.remove();
+  }
   data["OWID_WRL"] = { country: "Others" };
   data["OWID_WRL"][selectedEnergyType] = total - sum;
   var pie = d3.pie().value(function (d) {
@@ -157,14 +155,6 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
     .on("mouseover", function (d) {
       pieChartSvg.selectAll("path").style("opacity", otherOpacityOnHover);
       d3.select(this).style("opacity", opacityHover);
-
-      let g = d3
-        .select("#pie-chart")
-        .style("cursor", "pointer")
-        .append("g")
-        .attr("class", "tooltip")
-        .style("opacity", 0);
-
 
         pieChartTooltip
         .style('left', d3.event.pageX + 15 + 'px')
@@ -325,78 +315,4 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
   relax();
   lines.exit().remove();
   labels.exit().remove();
-
-  // Percentage (shows nothing when the percentage is too small)
-  var percentage = pieChartSvg
-    .select(".percentage")
-    .selectAll("text")
-    .data(data_ready);
-
-  function pointIsInArc(pt, ptData, d3Arc) {
-    // Center of the arc is assumed to be 0,0
-    // (pt.x, pt.y) are assumed to be relative to the center
-    var r1 = arc.innerRadius()(ptData),
-      r2 = arc.outerRadius()(ptData),
-      theta1 = arc.startAngle()(ptData),
-      theta2 = arc.endAngle()(ptData);
-
-    var dist = pt.x * pt.x + pt.y * pt.y,
-      angle = Math.atan2(pt.x, -pt.y);
-
-    angle = angle < 0 ? angle + Math.PI * 2 : angle;
-
-    return (
-      r1 * r1 <= dist && dist <= r2 * r2 && theta1 <= angle && angle <= theta2
-    );
-  }
-  percentage
-    .enter()
-    .append("text")
-    .merge(percentage)
-    .attr("transform", function (d) {
-      return "translate(" + arc.centroid(d) + ")";
-    })
-    .attr("dy", ".35em")
-    .style("text-anchor", "middle")
-    .style("font-size", "0.8em")
-    .style("color", "white")
-    .text(function (d) {
-      return calculatePercentage(d.data.value[selectedEnergyType]);
-    })
-    .each(function (d) {
-      var bb = this.getBBox(),
-        center = arc.centroid(d);
-
-      var topLeft = {
-        x: center[0] + bb.x,
-        y: center[1] + bb.y,
-      };
-
-      var topRight = {
-        x: topLeft.x + bb.width,
-        y: topLeft.y,
-      };
-
-      var bottomLeft = {
-        x: topLeft.x,
-        y: topLeft.y + bb.height,
-      };
-
-      var bottomRight = {
-        x: topLeft.x + bb.width,
-        y: topLeft.y + bb.height,
-      };
-
-      d.visible =
-        pointIsInArc(topLeft, d, arc) &&
-        pointIsInArc(topRight, d, arc) &&
-        pointIsInArc(bottomLeft, d, arc) &&
-        pointIsInArc(bottomRight, d, arc);
-    })
-    .each(function (d) {
-      if (!d.visible) {
-        d3.select(this).remove();
-      }
-    });
-  percentage.exit().remove();
 }
