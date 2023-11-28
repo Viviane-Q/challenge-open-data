@@ -24,13 +24,13 @@ jobs:
 
     - name: Minify HTML, CSS, and JS
       run: |
-        npx html-minifier --input-dir ./src --output-dir ./dist/src --file-ext html
-        npx postcss src/*.css --base src --dir dist/src
-        npx uglifyjs-folder src -eo dist/src -x .js
+        npx html-minifier --input-dir ./src --output-dir ./dist --file-ext html
+        npx postcss src/*.css --base src --dir dist
+        npx uglifyjs-folder src -eo dist -x .js
         mkdir dist/Data
-        cp -r Data/*json dist/Data/
+        cp -r src/Data/*json dist/Data/
         mkdir dist/Images
-        cp -r Images/* dist/Images/
+        cp -r src/Images/* dist/Images/
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
