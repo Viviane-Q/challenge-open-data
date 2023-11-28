@@ -184,6 +184,9 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
       d3.select("#pie-chart")
         .style("cursor", "default")
       d3.selectAll("#pie-chart path").style("opacity", opacity);
+
+      // remove tooltip
+      d3.select("#pie-chart").select(".tooltip").remove();
     })
     .transition()
     .duration(1000)
