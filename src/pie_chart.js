@@ -45,15 +45,15 @@ function removePieChart() {
   pieChartSvg.selectAll(".slices path").remove();
   pieChartSvg.selectAll(".lines line").remove();
   pieChartSvg.selectAll(".labels text").remove();
-  pieChartNoDataText= pieChartSvg.append("text")
-      .attr("text-anchor", "middle")
-      .attr("font-size", "2em")
-      .attr("font-weight", "bold")
-      .attr("dy", "0.25em")
-      .text("No data")
-  }
+  pieChartNoDataText.attr("opacity", 1).attr("pointer-events", "");
+}
 
-const pieChartNoDataText = null;
+const pieChartNoDataText = pieChartSvg.append("text")
+.attr("text-anchor", "middle")
+.attr("font-size", "2em")
+.attr("font-weight", "bold")
+.attr("dy", "0.25em")
+.text("No data");
 
 // add tooltip
 const pieChartTooltip = d3
@@ -118,9 +118,8 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
       return;
     }
   }
-  if (pieChartNoDataText != null){
-    pieChartNoDataText.remove();
-  }
+  pieChartNoDataText.attr("opacity", 0).attr("pointer-events", "none");
+
   data["OWID_WRL"] = { country: "Others" };
   data["OWID_WRL"][selectedEnergyType] = total - sum;
   var pie = d3.pie().value(function (d) {
@@ -154,7 +153,7 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
     // tooltip
     .on("mouseover", function (d) {
       pieChartSvg.selectAll("path").style("opacity", otherOpacityOnHover);
-      d3.select(this).style("opacity", opacityHover);
+      d3.select(this).style("opacity", opacityHover).style("stroke", "black");
 
         pieChartTooltip
         .style('left', d3.event.pageX + 15 + 'px')
@@ -173,7 +172,7 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
 
       d3.select("#pie-chart")
         .style("cursor", "default")
-      d3.selectAll("#pie-chart path").style("opacity", opacity);
+      d3.selectAll("#pie-chart path").style("opacity", opacity).style("stroke", "transparent");
 
       // remove tooltip
       d3.select("#pie-chart").select(".tooltip").remove();
