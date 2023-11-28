@@ -86,23 +86,15 @@ function drawChart(data) {
         .x((p) => x(new Date(p.xpoint, 0, 1)))
         .y((p) => y(p.ypoint))
     const hoverChart = (d) => {
-            const xMousePosition = d3.mouse(svg.node())[0] - 30;
-            const xScale = d3.scaleTime()
-                .domain(d3.extent(data, function (d) { return new Date(d.xpoint, 0, 1); }))
-                .range([20, width - 50]);
-            const YMousetPosition = d3.mouse(svg.node())[1];
-            const yScale = d3.scaleLinear()
-                .domain([0, d3.max(data, function (d) { return d.ypoint; })])
-                .range([height / 2, 0]);
-            const consumption = numberWithSpaces(Math.floor(yScale.invert(YMousetPosition)));
-            const year = xScale.invert(xMousePosition).getFullYear();
+            const year = d.xpoint;
+            let consumption = d.ypoint;
             const tooltipContent = `Year: ${year}\r\n
                 ${curveEnergyType[selectedEnergyType].legend}: ${consumption}
             `;
             tooltip
             .text(tooltipContent)
             .style('left', d3.event.pageX + 15 + 'px')
-            .style('top', d3.event.pageY - 150 + 'px')
+            .style('top', d3.event.pageY - 100 + 'px')
             .transition()
             .duration(400)
             .style('opacity', 1)
@@ -112,9 +104,15 @@ function drawChart(data) {
             .style('padding', '5px')
             .style('border-radius', '5px')
             .style('pointer-events', 'none')
-    }
-    const leaveChart = () => {
+            svg.selectAll("circle")
+            .filter(function (p) { return p.xpoint == year })
+            .attr("r", 10)
+        }
+    const leaveChart = (d) => {
         tooltip.transition().duration(300).style('opacity', 0);
+        svg.selectAll("circle")
+            .filter(function (p) { return p.xpoint == d.xpoint })
+            .attr("r", 5)
 
     }
     let color = ""
@@ -129,7 +127,7 @@ function drawChart(data) {
     svg.append("path").datum(data)
         .attr("fill", "none")
         .attr("transform", "translate(30,0)")
-        .attr("stroke", color)
+        .attr("stroke", "steelblue")
         .attr("stroke-width", 2)
         .attr("d", Gen);
     svg.append("g")
@@ -157,6 +155,7 @@ function curveReady( data) {
     for (let i = 0; i < energyBtn.length; i++) {
         energyBtn[i].addEventListener('click', () => {
             selectedEnergyType = energyBtn[i].getAttribute('energy-type');
+            console.log(selectedEnergyType);
             calculateValues();
             curveTitle.innerText = curveEnergyType[selectedEnergyType].title;
             if (selectedEnergyType === "consumption") {
