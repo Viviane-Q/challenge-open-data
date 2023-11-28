@@ -60,11 +60,11 @@
                 Nos données étaient séparées en 5 fichiers CSV différents. Dans ces fichiers, il manquait parfois des
                 données pour certaines années, comme par exemple les réserves de pétrole où nous avons des données qu'à
                 partir de 1980. Afin d'avoir seulement les données qui nous intéressent pour nos visualisations, nous
-                avons décidé de faire un traitement en python pour regrouper ces données intéressantes dans un seul
+                avons décidé de faire un traitement en Python pour regrouper ces données intéressantes dans un seul
                 fichier json. Les données en json sont regroupées d'abord par année puis par code de pays, cela nous
                 permet de pouvoir facilement effectuer les calculs nécessaires aux graphiques relatifs à une certaine
                 année. Cela permet également de faciliter le mapping entre nos données et les graphes proposés par la
-                librairie d3.js. Dans ce fichier JSON, nous retrouvons pour chaque année et chaque code pays : le nom
+                bibliothèque d3.js. Dans ce fichier JSON, nous retrouvons pour chaque année et chaque code pays : le nom
                 complet du pays, la production de pétrole en TWh, la consommation de pétrole en TWh, les réserves de
                 pétrole en barils, la part du pétrole dans le mix énergétique mondial (en pourcentage) ainsi que la
                 population du pays. Lors de l'exécution, ces données sont agregées en fonction de l'année et des pays
@@ -84,6 +84,17 @@
                 bibliothèque d3.js pour créer les
                 graphes.
             </p>
+            <p>
+                En ce qui concerne le déploiement, nous avons choisi de le faire en deux étapes via un Github Actions :
+            <ul>
+                <li>
+                    Minification des fichiers CSS et JavaScript à l'aide de <a>https://cssnano.co/</a> et de
+                    <a>https://www.npmjs.com/package/uglifyjs-folder</a>
+                </li>
+                <li>
+                    Déploiement sur Github Pages
+                </li>
+                </p>
         </article>
         <article>
             <h5>Les graphes</h5>
@@ -91,24 +102,29 @@
                 Notre page comporte 4 graphes :
             <ul>
                 <li>
-                    Map monde : ce graphe permet de visualiser la consommation, la production et les réserves de
+                    Carte choroplèthe du monde : ce graphe permet de visualiser la consommation, la production et les
+                    réserves de
                     pétroles (au choix de l'utilisateur) pour chaque pays. Un dégradé de couleur permet de mettre en
-                    avant les pays qui consomment/produisent/possèdent le plus de pétrole. La map permet par ailleurs de
+                    avant les pays qui consomment/produisent/possèdent le plus de pétrole. La carte permet par ailleurs
+                    de
                     sélectionner/déselectionner des pays pour se concentrer dessus dans les autres graphes. Cette
-                    sélection est également possible via le menu déroulant Countries présent au-dessus de la map.
+                    sélection est également possible via le menu déroulant <i>Countries</i> présent au-dessus de la
+                    cart.
                 </li>
                 <li>
-                    Courbe : on trouve, en dessous de la map, une courbe qui permet de visualiser l'évolution de la
+                    Courbe : on trouve, en dessous de la carte, une courbe qui permet de visualiser l'évolution de la
                     consommation, procuction, ou des réserves de pétrole au fil du temps. Ce graphe est le seul qui ne
-                    dépend pas de l'année sélection puisque son rôle est de montrer l'évolution au cours du temps, afin
-                    d'avoir une vue plus macroscopique. A noter qu'il faut bien faire attention aux échelles et aux
+                    dépend pas de l'année sélectionnée puisque son rôle est de montrer l'évolution au cours du temps,
+                    afin
+                    d'avoir une vue plus macroscopique. À noter qu'il faut bien faire attention aux échelles et aux
                     unités car on aurait tendance à penser, par exemple, que les réserves évoluent de la même manière
                     que la production lorsqu'on bascule d'un graphe à l'autre.
                 </li>
                 <li>
                     Mix : situé en bas à droite, ce graphe permet de visualiser la part du pétrole dans le mix
-                    énergétique mondial. C'est le seul graphe qui ne dépend pas de la catégorie sélectionnée
-                    (consommation, production, réserves). Les données de mix énergétiques sont effet liées uniquement à
+                    énergétique mondial ou des pays sélectionnés. C'est le seul graphe qui ne dépend pas de la catégorie
+                    sélectionnée
+                    (consommation, production, réserves). Les données de mix énergétique sont effet liées uniquement à
                     la consommation. Ce graphe permet de maintenir une vue sur la consommation de pétrole tout en
                     analysant la production par exemple. Ce graphe peut être analysé comme le pendant de la courbe
                     présentée plus haut. En effet, une baisse de la part du pétrole dans le mix énergétique mondial
@@ -118,7 +134,7 @@
                 <li>
                     Camembert : situé en haut à droite, ce dernier graphe permet de recenser les pays qui
                     consomment/produisent/possèdent le plus de pétrole en fonction de l'année sélectionnée. Il permet
-                    d'avoir une vue plus fine que la map qui ne fait pas de distinction claire entre les pays les plus
+                    d'avoir une vue plus fine que la carte qui ne fait pas de distinction claire entre les pays les plus
                     concernés.
                 </li>
             </ul>
@@ -138,7 +154,7 @@
                 </li>
                 <li>
                     L'empreinte environnementale : elle comprend les émissions de gaz à effet de serre et la
-                    consommation d’eau générées par la page. Notre page web génère 1.73 g de CO2 et consomme 2.59 cl
+                    consommation d'eau générées par la page. Notre page web génère 1.73 g de CO2 et consomme 2.59 cl
                     d'eau.
                 </li>
                 <li>
@@ -154,7 +170,7 @@
                 <li>
                     Le nombre de requêtes http : l'objectif est de limiter le nombre de requêtes http pour limiter
                     le nombre de connexions au serveur. Notre page web effectue 11 requêtes http trois seulement sont
-                    liées à la librairie d3.js. Le reste étant des requêtes vers des fichiers locaux. Une idée
+                    liées à la bibliothèque d3.js. Le reste étant des requêtes vers des fichiers locaux. Une idée
                     d'amélioration serait de
                     regrouper les fichiers locaux en un seul fichier. Mais cela rendrait le code moins lisible.
                 </li>
@@ -172,9 +188,10 @@
                     Ressources cachées : certaines ressources utilisées par notre page web ne comporte pas de gestion de
                     cache. Cela signifie que le comportement du navigateur vis-à-vis de ces ressources n'est pas
                     déterminé. Il est donc possible que le navigateur ne les mette pas en cache et donc qu'il les
-                    recharge à chaque fois qu'elles sont utilisées. A noter que les deux ressources concernées sont
-                    liées à la librairie d3.js. Nous n'avons donc pas la main sur ces ressources. La seule option pour
-                    corriger cela serait d'utiliser une autre librairie qui gère mieux le cache.
+                    recharge à chaque fois qu'elles sont utilisées. À noter que les deux ressources concernées sont
+                    liées à la bibliothèque d3.js. Nous n'avons donc pas la main sur ces ressources. La seule option
+                    pour
+                    corriger cela serait d'utiliser une autre bibliothèque qui gère mieux le cache.
                 </li>
                 <li>
                     Validation du JavaScript : l'analyse montre une erreur dans le fichier map.js. Or, après validation
