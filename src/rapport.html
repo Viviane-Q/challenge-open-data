@@ -73,8 +73,60 @@
         </article>
         <article>
             <h5>Architecture</h5>
-            <img src="./Images/architecture.png" alt="" width="600px" height="600px">
-            <img src="../Images/file_structure.png" alt="" width="600px" height="600px">
+            <p>
+                L'image suivante présente une vue d'ensemble de notre projet :
+                <img src="./Images/architecture.png" alt="" width="600px" height="600px">
+            </p>
+            <p>
+                Elle est organisée en trois points :
+            <ul>
+                <li>
+                    Traitement unique des données : il s'agit du travail effectué en Python sur les CSV de départ pour
+                    aboutir aux JSON utilisés par notre page web.
+                </li>
+                <li>
+                    Réalisation du site web : celle-ci est réalisée en HTML, CSS et JavaScript, ainsi que les
+                    bibliothèques externe Pico.css et D3.js.
+                </li>
+                <li>
+                    Hébergement statique du site web et des fichiers JSON : il est effectué grâce aux GitHub Actions et
+                    à GitHub Pages qui ont permis respectivement de minifier notre code source et de l'héberger.
+                </li>
+            </ul>
+            </p>
+            <p>
+                L'image suivante présente l'organisation du code source de notre site web :
+                <img src="./Images/file_structure.png" alt="" width="600px" height="600px">
+            </p>
+            <p>
+                Voici une courte de description du rôle de chacun :
+            <ul>
+                <li>
+                    index.html : il contient tous nos graphes.
+                </li>
+                <li>
+                    rapport.html : il contient le rapport ici présent.
+                </li>
+                <li>
+                    picoCustom.css : il permet de personnaliser certaines variables CSS de la bibliothèque Pico.css.
+                </li>
+                <li>
+                    style.css : il contient les éléments de style de notre site.
+                </li>
+                <li>
+                    map.js : il contient le code de la carte choroplèthe du monde.
+                </li>
+                <li>
+                    mix.js : il contient le code du graphe de mix énergétique.
+                </li>
+                <li>
+                    pie_chart.js : il contient le code du graphe en camembert.
+                </li>
+                <li>
+                    curve.js : il contient le code du graphe en courbe.
+                </li>
+            </ul>
+            </p>
         </article>
         <article>
             <h5>Choix des technologies</h5>
