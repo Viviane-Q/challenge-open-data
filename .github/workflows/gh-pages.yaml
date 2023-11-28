@@ -30,7 +30,9 @@ jobs:
         npx postcss src/*.css --base src --dir dist
         npx uglifyjs-folder src -eo dist -x .js
         mkdir dist/Data
-        cp -r Data/*json dist/Data/ 
+        cp -r Data/*json dist/Data/
+        mkdir dist/Images
+        cp -r Images/* dist/Images/
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
