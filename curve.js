@@ -129,7 +129,7 @@ function drawChart(data) {
     svg.append("path").datum(data)
         .attr("fill", "none")
         .attr("transform", "translate(30,0)")
-        .attr("stroke", "steelblue")
+        .attr("stroke", color)
         .attr("stroke-width", 2)
         .attr("d", Gen);
     svg.append("g")
