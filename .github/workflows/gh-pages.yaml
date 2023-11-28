@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,7 +20,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        npm install uglifyjs-folder cssnano postcss postcss-cli html-minifier
+        npm install 
 
     - name: Minify HTML, CSS, and JS
       run: |
