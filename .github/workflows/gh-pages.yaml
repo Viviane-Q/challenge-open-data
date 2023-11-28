@@ -16,7 +16,7 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '18'  # Specify your preferred Node.js version
+        node-version: '18'
 
     - name: Install dependencies
       run: |
@@ -24,8 +24,6 @@ jobs:
 
     - name: Minify HTML, CSS, and JS
       run: |
-        # Replace these commands with your actual minification commands
-        # Example commands using html-minifier, cssnano, and uglify-js
         npx html-minifier --input-dir ./src --output-dir ./dist/src --file-ext html
         npx postcss src/*.css --base src --dir dist/src
         npx uglifyjs-folder src -eo dist/src -x .js
