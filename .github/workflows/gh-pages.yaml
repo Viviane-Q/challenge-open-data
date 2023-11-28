@@ -29,6 +29,8 @@ jobs:
         npx html-minifier --input-dir ./src --output-dir ./dist --file-ext html
         npx postcss src/*.css --base src --dir dist
         npx uglifyjs-folder src -eo dist -x .js
+        mkdir dist/Data
+        cp -r Data/*json dist/Data/ 
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
