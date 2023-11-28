@@ -1,0 +1,1 @@
+:root{--form-element-spacing-vertical:0.5rem;--nav-element-spacing-vertical:0.6rem}h5{--typography-spacing-vertical:0px}[role=button],button,details,input[type=button]{--spacing:0.2rem;font-size:.8rem}details[role=list] summary:not([role]){height:auto}article{--block-spacing-vertical:var(--spacing);--block-spacing-horizontal:var(--spacing);margin-top:0}
