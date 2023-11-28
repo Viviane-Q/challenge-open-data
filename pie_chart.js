@@ -68,6 +68,8 @@ const pieChartTooltip = d3
 
 // update pie chart
 function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
+  // update title
+  pieChartTitle.innerHTML = `Global share of oil ${selectedEnergyType} in ${yearSlider.value}`;
   let data = {};
   total = originalData["OWID_WRL"][selectedEnergyType];
   if (!total) {
@@ -127,8 +129,6 @@ function updatePieChart(originalData, selectedEnergyType, selectedCountries) {
     return d.value[selectedEnergyType];
   });
 
-  // update title
-  pieChartTitle.innerHTML = `Global share of oil ${selectedEnergyType} in ${yearSlider.value}`;
   /* ------- Drawing pie chart -------*/
 
   var data_ready = pie(d3.entries(data));
