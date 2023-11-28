@@ -26,9 +26,9 @@ jobs:
       run: |
         # Replace these commands with your actual minification commands
         # Example commands using html-minifier, cssnano, and uglify-js
-        npx html-minifier --input-dir ./src --output-dir ./dist --file-ext html
-        npx postcss src/*.css --base src --dir dist
-        npx uglifyjs-folder src -eo dist -x .js
+        npx html-minifier --input-dir ./src --output-dir ./dist/src --file-ext html
+        npx postcss src/*.css --base src --dir dist/src
+        npx uglifyjs-folder src -eo dist/src -x .js
         mkdir dist/Data
         cp -r Data/*json dist/Data/
         mkdir dist/Images
