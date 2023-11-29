@@ -6,11 +6,11 @@ Le site est aussi déployé à l'adresse suivante : https://hocuspocuscitrus.git
 
 # Lancer le projet en mode développement
 
-## Préreques 
+## Prérequis 
 - Python
 
-## Lancement du serveur
+## Lancement du serveur
 ```bash
 python3 -m http.server
 ```
-Le site sera accessible sur localhost:8000/src.
+Le site sera accessible sur http://localhost:8000/src.
