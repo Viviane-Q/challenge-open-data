@@ -103,6 +103,13 @@ hr {
   width: fit-content;
 }
 
+img {
+  margin-top: 1rem;
+  margin: 1rem auto;
+  display: block;
+  box-shadow: 0px 0px 9px 4px rgba(0,0,0,0.10);
+}
+
 /*
 Map styling
 */
