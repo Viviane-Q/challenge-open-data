@@ -2,7 +2,7 @@
 
 Ce dépôt contient les sources du Challenge Open Data effectué dans le cadre d'un projet de l'ENSIMAG.
 
-Le site est aussi déployé à l'adresse suivante : https://hocuspocuscitrus.github.io/challenge-open-data/
+Le site est aussi déployé à l'adresse suivante : [https://viviane-q.github.io/challenge-open-data/](https://viviane-q.github.io/challenge-open-data/)
 
 # Organisation du dépôt
 ```bash
